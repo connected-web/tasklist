@@ -1,0 +1,14 @@
+<jumbotron>
+  <h1><product-title></product-title> Dashboard</h1>
+
+  <h2>Welcome to the tasklist!</h2>
+</jumbotron>
+
+<tasklist></tasklist>
+
+<template for="tasklist" data-source-url="/api/tasks/list">
+  {{#each tasks}}
+    <p>Description: {{text}}</p>
+    <p>Date: {{dateString}} ({{dateValue}})</p>
+  {{/each}}
+</template>
