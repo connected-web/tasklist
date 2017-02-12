@@ -44,15 +44,53 @@
   </div>
 
   <span class="templates">
+    <template for="tasklist-item">
+      <p style="background-color: {{color}}">{{content}}, {{date-string}}, <b>{{days-until}}</b></p>
+    </template>
+
+    <style for="tasklist-item">
+      tasklist-item {
+        display: block;
+      }
+
+      tasklist-item > p {
+        padding: 4px;
+        border-radius: 5px;
+      }
+    </style>
+
     <template for="tasklist">
       {{#each tasks}}
-        <p>Description: {{text}}</p>
-        <p>Date and Time: {{dateString}}</p>
-        <p>Recorded: {{entryDate}}</p>
+        <tasklist-item date-string="{{dateString}}" entry-date="{{entryDate}}" color="{{color}}" days-until="{{daysUntil}}">{{text}}</tasklist-item>
       {{/each}}
     </template>
-  </span>
 
+    <script for="tasklist" type="text/javascript">
+
+      function interpretDate(entryDate, dateString) {
+        entry = new Date(entryDate * 1000);
+        return entry + '' + ' + ' + dateString;
+      }
+
+      $(function() {
+        Tasklist = Component.configure('tasklist');
+
+        Tasklist.on('preRenderStep', function(instance) {
+          if (!instance.tasks) {
+            return;
+          }
+          instance.tasks.forEach(function(task) {
+            task.color = '#FDC';
+            task.daysUntil = interpretDate(task.entryDate, task.dateString);
+          });
+        });
+
+        Tasklist.apply(function(instance) {
+          instance.render();
+        });
+      });
+    </script>
+  </span>
 </body>
 
 </html>
