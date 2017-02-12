@@ -24,6 +24,9 @@
   <link rel="stylesheet" href="./external/github.min.css">
   <script src="./external/highlight.min.js"></script>
 
+  <!-- Date and time formatting -->
+  <script src="./js/interpret-date.js"></script>
+
   <!--[if lt IE 9]>
     <script src="./external/html5shiv.min.js"></script>
     <script src="./external/respond.min.js"></script>
@@ -67,10 +70,6 @@
 
     <script for="tasklist" type="text/javascript">
 
-      function interpretDate(entryDate, dateString) {
-        entry = new Date(entryDate * 1000);
-        return entry + '' + ' + ' + dateString;
-      }
 
       $(function() {
         Tasklist = Component.configure('tasklist');
