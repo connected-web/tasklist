@@ -1,0 +1,17 @@
+{
+  "name": "mkv25-site-deployment",
+  "version": "0.1.0",
+  "scripts": {
+    "live-release": "grunt release"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-cli": "^1.2.0",
+    "grunt-debug-task": "^0.1.5",
+    "grunt-ftp-deploy": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/connected-web/tasklist/tree/master/scripts/deploy"
+  }
+}

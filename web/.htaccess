@@ -1,0 +1,3 @@
+RewriteEngine  on
+RewriteCond %{HTTP_HOST} ^stage.mkv25.net|mkv25.net$
+RewriteRule tasks/json tasks.php [NC]
