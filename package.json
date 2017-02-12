@@ -1,6 +1,6 @@
 {
   "name": "connected-web-tasklist",
-  "description": "A simple task list tool",
+  "description": "A simple PHP, HTML and JavaScript based task list viewer",
   "version": "0.1.0",
   "private": true,
   "license": "ISC",
@@ -8,13 +8,6 @@
   "engines": {
     "node": ">=4.3.2"
   },
-  "scripts": {
-    "start": "node app.js",
-    "logs": "gcloud app logs read -s default",
-    "deploy": "gcloud app deploy --quiet"
-  },
-  "dependencies": {
-    "express": "4.14.0",
-    "product-monitor": "^2.2.6"
-  }
+  "scripts": {},
+  "dependencies": {}
 }

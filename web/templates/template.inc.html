@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>Tasklist</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- All the web compoent neat stuff -->
+  <script src="./external/jquery.min.js"></script>
+  <script src="./external/handlebars.js"></script>
+  <script src="./external/web-component.js"></script>
+
+  <!-- All the boostrap theming -->
+  <link rel="stylesheet" href="./external/bootstrap.min.css">
+  <script src="./external/bootstrap.min.js"></script>
+
+  <!-- Markdown support -->
+  <script src="./external/marked.min.js"></script>
+
+  <!-- Code highlighting support -->
+  <link rel="stylesheet" href="./external/github.min.css">
+  <script src="./external/highlight.min.js"></script>
+
+  <!--[if lt IE 9]>
+    <script src="./external/html5shiv.min.js"></script>
+    <script src="./external/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body role="document">
+
+  <?php require('./templates/navigation.inc.html') ?>
+
+  <div class="jumbotron"></div>
+
+  <div class="container theme-showcase" role="main">
+    <h1>Tasks</h1>
+
+    <tasklist data-source-url="./tasks/json"></tasklist>
+  </div>
+
+  <span class="templates">
+    <template for="tasklist">
+      {{#each tasks}}
+        <p>Description: {{text}}</p>
+        <p>Date and Time: {{dateString}}</p>
+        <p>Recorded: {{entryDate}}</p>
+      {{/each}}
+    </template>
+  </span>
+
+</body>
+
+</html>
