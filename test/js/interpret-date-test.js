@@ -8,7 +8,7 @@ const hour = minute * 60;
 const day = hour * 24;
 const week = day * 7;
 
-interpretDate.debug = 'all';
+interpretDate.debug = false;
 
 function test(input, expected, description) {
   it(description || `should match '${input}' as ${expected}`, () => {
@@ -49,5 +49,12 @@ describe('Interpret Date', () => {
     test('Tuesday after work', 'Tue, 14 Feb 2017 17:00:00 GMT');
     test('Wednesday after lunch', 'Wed, 15 Feb 2017 13:00:00 GMT');
     test('Thursday after school', 'Thu, 16 Feb 2017 16:00:00 GMT');
+  });
+
+  describe('Before points in time', () => {
+    test('Monday before breakfast', 'Mon, 13 Feb 2017 06:00:00 GMT');
+    test('Tuesday before work', 'Tue, 14 Feb 2017 07:00:00 GMT');
+    test('Wednesday before lunch', 'Wed, 15 Feb 2017 11:00:00 GMT');
+    test('Thursday before school', 'Thu, 16 Feb 2017 07:00:00 GMT');
   });
 });

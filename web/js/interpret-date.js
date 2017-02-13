@@ -39,9 +39,7 @@ var matchers = [{
 }];
 
 function matchAfter(token, tokens, context) {
-  const result = {};
   const subject = tokens.shift();
-
   const subjects = {
     work: applyHours(17),
     lunch: applyHours(13),
@@ -53,7 +51,15 @@ function matchAfter(token, tokens, context) {
 }
 
 function matchBefore(token, tokens, context) {
+  const subject = tokens.shift();
+  const subjects = {
+    work: applyHours(7),
+    lunch: applyHours(11),
+    school: applyHours(7),
+    breakfast: applyHours(6)
+  };
 
+  return subjects[subject] || {};
 }
 
 function matchEvening(token, tokens, context) {
