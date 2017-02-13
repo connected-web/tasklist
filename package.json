@@ -9,7 +9,7 @@
     "node": ">=4.3.2"
   },
   "scripts": {
-    "test": "mocha test/js/**/*.js --recursive"
+    "test": "mocha test/**/*.js --recursive"
   },
   "dependencies": {},
   "devDependencies": {
