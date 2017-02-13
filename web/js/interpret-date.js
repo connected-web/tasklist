@@ -45,7 +45,24 @@
   }, {
     regex: /^morn?i?n?g?$/i,
     handler: matchMorning
+  }, {
+    regex: /^tomor[row]*$/i,
+    handler: matchTomorrow
   }];
+
+  function matchTomorrow(token, tokens, context) {
+    var now = context.getTime();
+    var future = new Date(now + DAY);
+
+    return {
+      setUTCFullYear: future.getUTCFullYear(),
+      setUTCMonth: future.getUTCMonth(),
+      setUTCDate: future.getUTCDate(),
+      setUTCHours: 8,
+      setUTCMinutes: 0,
+      setUTCSeconds: 0
+    };
+  }
 
   function matchAfter(token, tokens, context) {
     const subject = tokens.shift();
@@ -107,8 +124,6 @@
     if (!Number.isInteger(monthOffset)) {
       throw 'Unrecognised month of the year: ' + monthOffset;
     }
-
-    console.log('Made it this far', monthOffset, key)
 
     monthOffset = (monthOffset - context.getMonth() + 12) % 12 || 12;
     var now = context.getTime();

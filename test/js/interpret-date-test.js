@@ -59,6 +59,12 @@ describe('Interpret Date', () => {
     test('December eve', 'Fri, 01 Dec 2017 18:00:00 GMT');
   });
 
+  describe('Tomorrow', () => {
+    test('tomorrow', 'Mon, 13 Feb 2017 08:00:00 GMT');
+    test('tomorrow after work', 'Mon, 13 Feb 2017 17:00:00 GMT');
+    test('tomorrow before lunch', 'Mon, 13 Feb 2017 11:00:00 GMT');
+    test('tomorrow at 8am', 'Mon, 13 Feb 2017 08:00:00 GMT');
+  });
 
   describe('After points in time', () => {
     test('Monday after breakfast', 'Mon, 13 Feb 2017 07:00:00 GMT');
