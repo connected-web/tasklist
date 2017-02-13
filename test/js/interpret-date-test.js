@@ -38,5 +38,9 @@ describe('Interpret Date', function() {
     test('evening', 'Sun, 12 Feb 2017 18:00:00 GMT');
     test('Monday evenig', 'Mon, 13 Feb 2017 18:00:00 GMT');
     test('Friday eve', 'Fri, 17 Feb 2017 18:00:00 GMT');
+
+    test('morning', 'Sun, 12 Feb 2017 08:00:00 GMT');
+    test('Monday morn', 'Mon, 13 Feb 2017 08:00:00 GMT');
+    test('Friday mornin', 'Fri, 17 Feb 2017 08:00:00 GMT');
   });
 });

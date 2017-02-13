@@ -19,11 +19,22 @@ var matchers = [{
 }, {
   regex: /^even?i?n?g?$/i,
   handler: matchEvening
+}, {
+  regex: /^morn?i?n?g?$/i,
+  handler: matchMorning
 }];
 
 function matchEvening(token, tokens, context) {
   return {
     setUTCHours: 18,
+    setUTCMinutes: 0,
+    setUTCSeconds: 0
+  };
+}
+
+function matchMorning(token, tokens, context) {
+  return {
+    setUTCHours: 8,
     setUTCMinutes: 0,
     setUTCSeconds: 0
   };
