@@ -44,6 +44,22 @@ describe('Interpret Date', () => {
     test('Friday mornin', 'Fri, 17 Feb 2017 08:00:00 GMT');
   });
 
+  describe('Month of year strings', () => {
+    test('Jan', 'Mon, 01 Jan 2018 12:00:00 GMT');
+    test('Febru evenig', 'Thu, 01 Feb 2018 18:00:00 GMT');
+    test('March eve', 'Wed, 01 Mar 2017 18:00:00 GMT');
+    test('April eve', 'Sat, 01 Apr 2017 18:00:00 GMT');
+    test('May eve', 'Mon, 01 May 2017 18:00:00 GMT');
+    test('June morn', 'Thu, 01 Jun 2017 08:00:00 GMT');
+    test('July mornin', 'Sat, 01 Jul 2017 08:00:00 GMT');
+    test('August mornin', 'Tue, 01 Aug 2017 08:00:00 GMT');
+    test('Sept eve', 'Fri, 01 Sep 2017 18:00:00 GMT');
+    test('October mornin', 'Sun, 01 Oct 2017 08:00:00 GMT');
+    test('November mornin', 'Wed, 01 Nov 2017 08:00:00 GMT');
+    test('December eve', 'Fri, 01 Dec 2017 18:00:00 GMT');
+  });
+
+
   describe('After points in time', () => {
     test('Monday after breakfast', 'Mon, 13 Feb 2017 07:00:00 GMT');
     test('Tuesday after work', 'Tue, 14 Feb 2017 17:00:00 GMT');
