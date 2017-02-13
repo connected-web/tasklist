@@ -80,7 +80,7 @@
           }
           instance.tasks.forEach(function(task) {
             task.color = '#FDC';
-            task.daysUntil = interpretDate(task.entryDate, task.dateString);
+            task.daysUntil = interpretDate(new Date(task.entryDate * 1000), task.dateString);
           });
         });
 
