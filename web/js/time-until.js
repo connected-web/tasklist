@@ -13,7 +13,12 @@
     var ms = Math.abs(input);
 
     if (ms < SECOND) {
-      return 'now';
+      return {
+        value: ms,
+        unit: 'millisecond',
+        string: 'now',
+        past: (input < 0)
+      };
     } else if (ms < 2 * MINUTE) {
       value = Math.floor(ms / SECOND);
       unit = 'second';
@@ -38,9 +43,14 @@
     }
 
     plural = (value > 1) ? 's' : '';
-    past = (input < 0) ? 'in the past' : '';
+    past = (input < 0) ? 'ago' : '';
 
-    return [value, unit + plural, past].join(' ').trim();
+    return {
+      unit: unit,
+      value: value,
+      string: [value, unit + plural, past].join(' ').trim(),
+      past: (input < 0)
+    };
   }
 
   function timeUntil(date, context) {

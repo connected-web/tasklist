@@ -2,26 +2,36 @@
 
 require('./php/FileCache.class.php');
 
-// read from cache
-$tasksCacheId = 'tasks';
-$fiveMinutes = 5 * 60;
-if(FileCache::ageOfCache($tasksCacheId) < $fiveMinutes) {
-  $tasks = FileCache::readDataFromCache($tasksCacheId);
+
+if(isset($_GET['local']) || true) {
+  // read from local file
+  $json_file = str_replace('\r', '', file_get_contents(__DIR__ . '/../state/tasklist.json'));
+  $tasks = json_decode($json_file);
 }
 else {
-  // read and decode JSON file
-  $json_file = @file_get_contents('https://rawgit.com/connected-web/tasklist/master/state/tasklist.json');
-  if(!$json_file) {
-    $json_file = json_encode(Array(
-      Array(
-        'text' => 'No tasks available',
-        'dateString' => 'Today',
-        'entryDate' => time()
-      )
-    ));
+  // read from cache
+  $tasksCacheId = 'tasks';
+  $fiveMinutes = 5 * 60;
+  if(FileCache::ageOfCache($tasksCacheId) < $fiveMinutes) {
+    $tasks = FileCache::readDataFromCache($tasksCacheId);
   }
-  $tasks = json_decode($json_file);
-  FileCache::storeDataInCache($tasks, $tasksCacheId);
+  else {
+    // read and decode JSON file
+    $json_file = @file_get_contents('https://rawgit.com/connected-web/tasklist/master/state/tasklist.json');
+    $tasks = json_decode($json_file);
+    FileCache::storeDataInCache($tasks, $tasksCacheId);
+  }
+}
+
+// minimum response
+if(!$tasks) {
+  $tasks = (Array(
+    Array(
+      'text' => 'No tasks available',
+      'dateString' => 'Today',
+      'entryDate' => time()
+    )
+  ));
 }
 
 // wrap tasks in object

@@ -47,9 +47,9 @@
     <tasklist data-source-url="./tasks/json"></tasklist>
   </div>
 
-  <span class="templates">
+  <div class="templates">
     <template for="tasklist-item">
-      <p style="background-color: {{color}}"><b>{{days-until}}</b> : {{content}}, {{date-string}}<span class="date">{{interpeted-date}}</span></p>
+      <p><b>{{days-until}}</b> : {{content}}, <i style="opacity: 0.3;">{{date-string}}</i><span class="date">{{interpeted-date}}</span></p>
     </template>
 
     <style for="tasklist-item">
@@ -58,30 +58,65 @@
         padding: 5px 0;
       }
 
-      tasklist-item > p > span.date {
+      tasklist-item>p>span.date {
         display: none;
       }
 
-      tasklist-item:hover > p > span.date {
+      tasklist-item:hover>p>span.date {
         display: block;
       }
 
-      tasklist-item > p {
+      tasklist-item>p {
         padding: 4px;
         border-radius: 5px;
+        background: #999;
         margin: 0;
+      }
+
+      tasklist-item.past {
+        opacity: 0.4;
+      }
+
+      tasklist-item.unit-second.past, tasklist-item.unit-minute.past, tasklist-item.unit-hour.past {
+        opacity: 1.0;
+      }
+
+      tasklist-item.unit-day p {
+        background: #AAF;
+      }
+
+      tasklist-item.unit-week p {
+        background: #AFA;
+      }
+
+      tasklist-item.unit-month p {
+        background: #BFB;
+      }
+
+      tasklist-item.unit-year p {
+        background: #CFC;
+      }
+
+      tasklist-item.past p {
+        background: #999;
+      }
+
+      tasklist-item.unit-minute p, tasklist-item.unit-second p {
+        background: #F66;
+      }
+
+      tasklist-item.unit-hour p {
+        background: #FA6;
       }
     </style>
 
     <template for="tasklist">
       {{#each tasks}}
-        <tasklist-item date-string="{{dateString}}" entry-date="{{entryDate}}" color="{{color}}" days-until="{{daysUntil}}" interpeted-date="{{interpetedDate}}">{{text}}</tasklist-item>
+      <tasklist-item class="{{class}}" date-string="{{dateString}}" entry-date="{{entryDate}}" days-until="{{daysUntil.string}}" interpeted-date="{{interpetedDate}}">{{text}}</tasklist-item>
       {{/each}}
     </template>
 
     <script for="tasklist" type="text/javascript">
-
-
       $(function() {
         Tasklist = Component.configure('tasklist');
 
@@ -90,10 +125,17 @@
             return;
           }
           instance.tasks.forEach(function(task) {
-            task.color = '#FDC';
             task.interpetedDate = interpretDate(new Date(task.entryDate * 1000), task.dateString);
             task.daysUntil = timeUntil(task.interpetedDate);
+            task.unit = task.daysUntil.unit;
+            task.past = task.daysUntil.past ? 'past' : 'future';
+            task.class = ('unit-' + task.unit + ' ' + task.past).trim();
           });
+
+          instance.tasks = instance.tasks.sort(function(a, b) {
+            return a.interpetedDate.getTime() - b.interpetedDate.getTime();
+          });
+
         });
 
         Tasklist.apply(function(instance) {
@@ -101,7 +143,7 @@
         });
       });
     </script>
-  </span>
+  </div>
 </body>
 
 </html>

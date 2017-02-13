@@ -10,7 +10,7 @@ const week = day * 7;
 
 function test(input, expected, description) {
   it(description || `should interpret '${input}' as ${expected}`, () => {
-    const actual = timeUntil(new Date(Date.parse(input)), fixedTime);
+    const actual = timeUntil(new Date(Date.parse(input)), fixedTime).string;
     assert.deepEqual(actual, expected);
   });
 }
