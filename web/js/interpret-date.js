@@ -5,6 +5,14 @@ const HOUR = MINUTE * 60;
 const DAY = HOUR * 24;
 const WEEK = DAY * 7;
 
+const applyHours = (hours) => {
+  return {
+    setUTCHours: hours,
+    setUTCMinutes: 0,
+    setUTCSeconds: 0
+  };
+};
+
 function interpretDate(dateContext, dateString) {
   var entry = new Date(dateFor(dateString, dateContext));
   if (interpretDate.debug) {
@@ -20,9 +28,33 @@ var matchers = [{
   regex: /^even?i?n?g?$/i,
   handler: matchEvening
 }, {
+  regex: /^before$/i,
+  handler: matchBefore
+}, {
+  regex: /^after$/i,
+  handler: matchAfter
+}, {
   regex: /^morn?i?n?g?$/i,
   handler: matchMorning
 }];
+
+function matchAfter(token, tokens, context) {
+  const result = {};
+  const subject = tokens.shift();
+
+  const subjects = {
+    work: applyHours(17),
+    lunch: applyHours(13),
+    school: applyHours(16),
+    breakfast: applyHours(7)
+  };
+
+  return subjects[subject] || {};
+}
+
+function matchBefore(token, tokens, context) {
+
+}
 
 function matchEvening(token, tokens, context) {
   return {

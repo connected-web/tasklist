@@ -43,4 +43,11 @@ describe('Interpret Date', function() {
     test('Monday morn', 'Mon, 13 Feb 2017 08:00:00 GMT');
     test('Friday mornin', 'Fri, 17 Feb 2017 08:00:00 GMT');
   });
+
+  describe('After points in time', () => {
+    test('Monday after breakfast', 'Mon, 13 Feb 2017 07:00:00 GMT');
+    test('Tuesday after work', 'Tue, 14 Feb 2017 17:00:00 GMT');
+    test('Wednesday after lunch', 'Wed, 15 Feb 2017 13:00:00 GMT');
+    test('Thursday after school', 'Thu, 16 Feb 2017 16:00:00 GMT');
+  })
 });
