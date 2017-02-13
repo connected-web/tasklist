@@ -16,7 +16,18 @@ function interpretDate(dateContext, dateString) {
 var matchers = [{
   regex: /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)u?s?n?e?s?r?s?d?a?y?$/i,
   handler: matchDayOfWeek
+}, {
+  regex: /^even?i?n?g?$/i,
+  handler: matchEvening
 }];
+
+function matchEvening(token, tokens, context) {
+  return {
+    setUTCHours: 18,
+    setUTCMinutes: 0,
+    setUTCSeconds: 0
+  };
+}
 
 function matchDayOfWeek(token, tokens, context) {
   var matcher = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)u?s?n?e?s?r?s?d?a?y?$/i;
