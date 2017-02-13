@@ -1,4 +1,4 @@
-(function() {
+(function () {
   var LOG_TABS = '     ';
   const SECOND = 1000;
   const MINUTE = SECOND * 60;
@@ -8,24 +8,9 @@
   const MONTH = DAY * 30.417;
   const YEAR = DAY * 365.25;
 
-  const applyHours = (hours) => {
-    return {
-      setUTCHours: hours,
-      setUTCMinutes: 0,
-      setUTCSeconds: 0
-    };
-  };
-
   var DayOfWeekMatcher = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)u?s?n?e?s?r?s?d?a?y?$/i;
   var MonthOfYearMatcher = /^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[ruarychileyustemober]*$/i;
-
-  function interpretDate(dateContext, dateString) {
-    var entry = new Date(dateFor(dateString, dateContext));
-    if (interpretDate.debug) {
-      console.log(LOG_TABS, 'Intepreted date', dateContext.toUTCString(), dateString, 'as', entry.toUTCString());
-    }
-    return entry;
-  }
+  var DateInMonthMatcher = /^(\d\d?)[nrdsth]{2}$/i;
 
   var matchers = [{
     regex: DayOfWeekMatcher,
@@ -48,7 +33,26 @@
   }, {
     regex: /^tomor[row]*$/i,
     handler: matchTomorrow
+  }, {
+    regex: DateInMonthMatcher,
+    handler: matchDateInMonth
   }];
+
+  const applyHours = (hours) => {
+    return {
+      setUTCHours: hours,
+      setUTCMinutes: 0,
+      setUTCSeconds: 0
+    };
+  };
+
+  function matchDateInMonth(token, tokens, context) {
+    var dateInMonth = token.match(DateInMonthMatcher)[1];
+
+    return {
+      setUTCDate: dateInMonth
+    };
+  }
 
   function matchTomorrow(token, tokens, context) {
     var now = context.getTime();
@@ -57,10 +61,7 @@
     return {
       setUTCFullYear: future.getUTCFullYear(),
       setUTCMonth: future.getUTCMonth(),
-      setUTCDate: future.getUTCDate(),
-      setUTCHours: 8,
-      setUTCMinutes: 0,
-      setUTCSeconds: 0
+      setUTCDate: future.getUTCDate()
     };
   }
 
@@ -132,10 +133,7 @@
     return {
       setUTCFullYear: future.getUTCFullYear(),
       setUTCMonth: future.getUTCMonth(),
-      setUTCDate: 1,
-      setUTCHours: 12,
-      setUTCMinutes: 0,
-      setUTCSeconds: 0
+      setUTCDate: 1
     };
   }
 
@@ -162,10 +160,7 @@
     return {
       setUTCFullYear: future.getUTCFullYear(),
       setUTCMonth: future.getUTCMonth(),
-      setUTCDate: future.getUTCDate(),
-      setUTCHours: 8,
-      setUTCMinutes: 0,
-      setUTCSeconds: 0
+      setUTCDate: future.getUTCDate()
     };
   }
 
@@ -183,7 +178,7 @@
     var results = [];
     while (tokens.length > 0) {
       token = tokens.shift();
-      matchers.forEach(function(matcher) {
+      matchers.forEach(function (matcher) {
         if (matcher.regex.test(token)) {
           var result = matcher.handler(token, tokens, context);
           if (interpretDate.debug) {
@@ -194,15 +189,31 @@
       });
     }
 
+    if (results.length > 0) {
+      results.unshift({
+        setUTCHours: 8,
+        setUTCMinutes: 0,
+        setUTCSeconds: 0
+      });
+    }
+
     var date = new Date(context);
-    results.forEach(function(item) {
-      Object.keys(item).forEach(function(key) {
+    results.forEach(function (item) {
+      Object.keys(item).forEach(function (key) {
         var value = item[key];
         date[key](value);
       });
     });
 
     return date;
+  }
+
+  function interpretDate(dateContext, dateString) {
+    var entry = new Date(dateFor(dateString, dateContext));
+    if (interpretDate.debug) {
+      console.log(LOG_TABS, 'Intepreted date', dateContext.toUTCString(), dateString, 'as', entry.toUTCString());
+    }
+    return entry;
   }
 
   if (typeof module !== 'undefined') {

@@ -45,10 +45,10 @@ describe('Interpret Date', () => {
   });
 
   describe('Month of year strings', () => {
-    test('Jan', 'Mon, 01 Jan 2018 12:00:00 GMT');
+    test('Jan', 'Mon, 01 Jan 2018 08:00:00 GMT');
     test('Febru evenig', 'Thu, 01 Feb 2018 18:00:00 GMT');
     test('March eve', 'Wed, 01 Mar 2017 18:00:00 GMT');
-    test('April eve', 'Sat, 01 Apr 2017 18:00:00 GMT');
+    test('April', 'Sat, 01 Apr 2017 08:00:00 GMT');
     test('May eve', 'Mon, 01 May 2017 18:00:00 GMT');
     test('June morn', 'Thu, 01 Jun 2017 08:00:00 GMT');
     test('July mornin', 'Sat, 01 Jul 2017 08:00:00 GMT');
@@ -78,5 +78,13 @@ describe('Interpret Date', () => {
     test('Tuesday before work', 'Tue, 14 Feb 2017 07:00:00 GMT');
     test('Wednesday before lunch', 'Wed, 15 Feb 2017 11:00:00 GMT');
     test('Thursday before school', 'Thu, 16 Feb 2017 07:00:00 GMT');
+  });
+
+  describe('Dates in month', () => {
+    test('24th', 'Fri, 24 Feb 2017 08:00:00 GMT');
+    test('26th', 'Sun, 26 Feb 2017 08:00:00 GMT');
+    test('evening of the 30th', 'Thu, 02 Mar 2017 18:00:00 GMT');
+    test('January 1st', 'Mon, 01 Jan 2018 08:00:00 GMT');
+    test('May 21st', 'Sun, 21 May 2017 08:00:00 GMT');
   });
 });
