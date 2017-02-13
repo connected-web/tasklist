@@ -26,6 +26,7 @@
 
   <!-- Date and time formatting -->
   <script src="./js/interpret-date.js"></script>
+  <script src="./js/time-until.js"></script>
 
   <!--[if lt IE 9]>
     <script src="./external/html5shiv.min.js"></script>
@@ -48,23 +49,33 @@
 
   <span class="templates">
     <template for="tasklist-item">
-      <p style="background-color: {{color}}">{{content}}, {{date-string}}, <b>{{days-until}}</b></p>
+      <p style="background-color: {{color}}"><b>{{days-until}}</b> : {{content}}, {{date-string}}<span class="date">{{interpeted-date}}</span></p>
     </template>
 
     <style for="tasklist-item">
       tasklist-item {
+        display: block;
+        padding: 5px 0;
+      }
+
+      tasklist-item > p > span.date {
+        display: none;
+      }
+
+      tasklist-item:hover > p > span.date {
         display: block;
       }
 
       tasklist-item > p {
         padding: 4px;
         border-radius: 5px;
+        margin: 0;
       }
     </style>
 
     <template for="tasklist">
       {{#each tasks}}
-        <tasklist-item date-string="{{dateString}}" entry-date="{{entryDate}}" color="{{color}}" days-until="{{daysUntil}}">{{text}}</tasklist-item>
+        <tasklist-item date-string="{{dateString}}" entry-date="{{entryDate}}" color="{{color}}" days-until="{{daysUntil}}" interpeted-date="{{interpetedDate}}">{{text}}</tasklist-item>
       {{/each}}
     </template>
 
@@ -80,7 +91,8 @@
           }
           instance.tasks.forEach(function(task) {
             task.color = '#FDC';
-            task.daysUntil = interpretDate(new Date(task.entryDate * 1000), task.dateString);
+            task.interpetedDate = interpretDate(new Date(task.entryDate * 1000), task.dateString);
+            task.daysUntil = timeUntil(task.interpetedDate);
           });
         });
 
