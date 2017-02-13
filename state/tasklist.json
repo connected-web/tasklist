@@ -2,25 +2,28 @@
     "text": "Superbowl Party at Alan and Sophie's",
     "dateString": "Sunday evening",
     "entryDate": 1485939772
-  },
-  {
+}, {
     "text": "Cinema trip to see Founder",
     "dateString": "Friday after work",
     "entryDate": 1486920656
-  },
-  {
+}, {
     "text": "Work as usual",
     "dateString": "Tomorrow",
     "entryDate": 1486949591
-  },
-  {
+}, {
     "text": "Play expo in Leeds",
     "dateString": "Early April",
     "entryDate": 1486921716
-  },
-  {
+}, {
     "text": "Hannah's Birthday",
     "dateString": "September 4th",
     "entryDate": 1486952129
-  }
-]
+}, {
+    "text": "Be at Manchester airport with Hannah",
+    "dateString": "5:15am 25th February",
+    "entryDate": 1487007994
+} {
+    "text": "Prad's Housewarming",
+    "dateString": "25th February evening",
+    "entryDate": 1487007994
+}]
