@@ -17,13 +17,13 @@ function test(input, expected, description) {
   });
 }
 
-describe('Interpret Date', function() {
+describe('Interpret Date', () => {
 
   describe('No change', () => {
     test('', 'Sun, 12 Feb 2017 23:08:56 GMT');
   });
 
-  describe('Day of Week Matchers', function() {
+  describe('Day of Week Matchers', () => {
     test('Next sunday', 'Sun, 19 Feb 2017 08:00:00 GMT', 'should match the next Sunday from a Sunday');
     test('on Monday', 'Mon, 13 Feb 2017 08:00:00 GMT');
     test('Tues', 'Tue, 14 Feb 2017 08:00:00 GMT');
@@ -49,5 +49,5 @@ describe('Interpret Date', function() {
     test('Tuesday after work', 'Tue, 14 Feb 2017 17:00:00 GMT');
     test('Wednesday after lunch', 'Wed, 15 Feb 2017 13:00:00 GMT');
     test('Thursday after school', 'Thu, 16 Feb 2017 16:00:00 GMT');
-  })
+  });
 });
