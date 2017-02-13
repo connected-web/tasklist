@@ -2,8 +2,7 @@
 
 require('./php/FileCache.class.php');
 
-
-if(isset($_GET['local']) || true) {
+if(isset($_GET['local'])) {
   // read from local file
   $json_file = str_replace('\r', '', file_get_contents(__DIR__ . '/../state/tasklist.json'));
   $tasks = json_decode($json_file);
