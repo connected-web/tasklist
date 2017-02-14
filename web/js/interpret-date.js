@@ -40,14 +40,12 @@
 
   const applyHours = (hours) => {
     return {
-      setUTCHours: hours,
-      setUTCMinutes: 0,
-      setUTCSeconds: 0
+      setUTCHours: hours
     };
   };
 
   function matchDateInMonth(token, tokens, context) {
-    var dateInMonth = token.match(DateInMonthMatcher)[1];
+    var dateInMonth = Number.parseInt(token.match(DateInMonthMatcher)[1]);
 
     return {
       setUTCDate: dateInMonth
@@ -91,17 +89,13 @@
 
   function matchEvening(token, tokens, context) {
     return {
-      setUTCHours: 18,
-      setUTCMinutes: 0,
-      setUTCSeconds: 0
+      setUTCHours: 18
     };
   }
 
   function matchMorning(token, tokens, context) {
     return {
-      setUTCHours: 8,
-      setUTCMinutes: 0,
-      setUTCSeconds: 0
+      setUTCHours: 8
     };
   }
 
@@ -132,8 +126,7 @@
 
     return {
       setUTCFullYear: future.getUTCFullYear(),
-      setUTCMonth: future.getUTCMonth(),
-      setUTCDate: 1
+      setUTCMonth: future.getUTCMonth()
     };
   }
 
@@ -189,20 +182,36 @@
       });
     }
 
+    const decisions = {};
     if (results.length > 0) {
-      results.unshift({
-        setUTCHours: 8,
-        setUTCMinutes: 0,
-        setUTCSeconds: 0
+      results.forEach(function (item) {
+        Object.keys(item).forEach(function (key) {
+          var value = item[key];
+          decisions[key] = value;
+        });
       });
+
+      if (Number.isInteger(decisions.setUTCFullYear)) {
+        decisions.setUTCMonth = decisions.setUTCMonth || 0;
+      }
+      if (Number.isInteger(decisions.setUTCMonth)) {
+        decisions.setUTCDate = decisions.setUTCDate || 1;
+      }
+      if (Number.isInteger(decisions.setUTCDate)) {
+        decisions.setUTCHours = decisions.setUTCHours || 8;
+      }
+      if (Number.isInteger(decisions.setUTCHours)) {
+        decisions.setUTCMinutes = decisions.setUTCMinutes || 0;
+      }
+      if (Number.isInteger(decisions.setUTCMinutes)) {
+        decisions.setUTCSeconds = decisions.setUTCSeconds || 0;
+      }
     }
 
     var date = new Date(context);
-    results.forEach(function (item) {
-      Object.keys(item).forEach(function (key) {
-        var value = item[key];
-        date[key](value);
-      });
+    Object.keys(decisions).forEach(function (key) {
+      var value = decisions[key];
+      date[key](value);
     });
 
     return date;

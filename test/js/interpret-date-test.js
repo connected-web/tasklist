@@ -86,5 +86,8 @@ describe('Interpret Date', () => {
     test('evening of the 30th', 'Thu, 02 Mar 2017 18:00:00 GMT');
     test('January 1st', 'Mon, 01 Jan 2018 08:00:00 GMT');
     test('May 21st', 'Sun, 21 May 2017 08:00:00 GMT');
+    test('1st February', 'Thu, 01 Feb 2018 08:00:00 GMT');
+    test('1st March', 'Wed, 01 Mar 2017 08:00:00 GMT');
+    test('23rd August', 'Wed, 23 Aug 2017 08:00:00 GMT');
   });
 });
