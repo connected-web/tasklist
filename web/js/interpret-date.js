@@ -120,7 +120,7 @@
       throw 'Unrecognised month of the year: ' + monthOffset;
     }
 
-    monthOffset = (monthOffset - context.getMonth() + 12) % 12 || 12;
+    monthOffset = (monthOffset - context.getMonth() + 12) % 12 || 0;
     var now = context.getTime();
     var future = new Date(now + (monthOffset * MONTH));
 
