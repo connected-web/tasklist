@@ -49,6 +49,9 @@
     <h2>Tasks</h2>
     <p>Current timestamp: {{NOW}}</p>
     <tasklist data-source-url="./tasks/json"></tasklist>
+
+    <h2>Local Data</h2>
+    <div id="local-data"></div>
   </div>
 
 
@@ -93,6 +96,33 @@
 
         return task;
       }
+
+      function readLocalTasks() {
+        return Cookies.read().tasklist || {};
+      }
+
+      function writeLocalTasks(tasks) {
+        Cookies.write({
+          tasklist: tasks
+        }, 100, '/tasklist');
+      }
+
+      function displayCookies() {
+        var localData = readLocalTasks();
+        $('#local-data').html('<pre>' + JSON.stringify(localData, null, 2) + '</pre>');
+      }
+
+      function addNewEntry(task) {
+        var localTasks = readLocalTasks();
+        localTasks.tasks = localTasks.tasks || [];
+        if (task.dateString && task.text) {
+          localTasks.tasks.push(task);
+          writeLocalTasks(localTasks);
+          displayCookies();
+        }
+      }
+
+      displayCookies();
     </script>
 
     <script for="tasklist-input" type="text/javascript">
@@ -131,8 +161,15 @@
             updateAddEntryPreview()
           });
 
-          $add.on('select', function(event) {
+          $add.on('click', function(event) {
             updateAddEntryPreview()
+            var task = {
+              entryDate: Date.now() / 1000,
+              dateString: $date.val(),
+              text: $description.val()
+            };
+            addNewEntry(task);
+            displayCookies();
           });
 
         });
@@ -220,9 +257,12 @@
         Tasklist = Component.configure('tasklist');
 
         Tasklist.on('preRenderStep', function(instance) {
-          if (!instance.tasks) {
-            return;
-          }
+
+          instance.tasks = instance.tasks || [];
+          var localTasks = readLocalTasks().tasks.forEach(function(task) {
+            task.local = true;
+            instance.tasks.push(task);
+          });
           instance.tasks.forEach(enhanceTask);
 
           instance.tasks = instance.tasks.sort(function(a, b) {
