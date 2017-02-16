@@ -5,7 +5,11 @@ const app = express()
 const fs = require('fs')
 const utf8 = 'utf8'
 
-app.get('/tasklist', function (req, res) {
+app.get('/tasklist/', function (req, res) {
+  if (req.originalUrl !== '/tasklist/') {
+    return res.redirect(301, '/tasklist/')
+  }
+
   const template = fs.readFileSync('./web/templates/template.inc.html', utf8)
   const navigation = fs.readFileSync('./web/templates/navigation.inc.html', utf8)
 
@@ -14,7 +18,7 @@ app.get('/tasklist', function (req, res) {
   res.send(output)
 })
 
-app.use('/tasklist', express.static(path.join(__dirname, 'web')))
+app.use('/tasklist/', express.static(path.join(__dirname, 'web')))
 
 const tasklist = {
   tasks: require(path.join(__dirname, 'state', 'tasklist.json'))
@@ -26,5 +30,5 @@ app.get('/tasklist/tasks/json', function (req, res) {
 
 const port = 8000;
 app.listen(port, function () {
-  console.log(`Taklist listening on port ${port}!`)
+  console.log(`Taklist listening on http://localhost:${port}/tasklist/`)
 });
