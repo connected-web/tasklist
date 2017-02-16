@@ -68,6 +68,6 @@
   }
 
   if (typeof window !== 'undefined') {
-    window.interpretDate = Cookies;
+    window.Cookies = Cookies;
   }
 })();
