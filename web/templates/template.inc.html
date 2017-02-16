@@ -77,7 +77,7 @@
         </div>
       </form>
 
-      <tasklist-item id="new-event-preview" class="{{preview.class}}" date-string="{{preview.dateString}}" entry-date="{{preview.entryDate}}" days-until="{{preview.daysUntil.string}}" reference-date="{{preview.referenceDate.string}}" interpeted-date="{{preview.interpetedDate.string}}">{{preview.text}}</tasklist-item>
+      <div id="new-event-preview"></div>
     </template>
 
     <script for="shared" type="text/javascript">
@@ -117,10 +117,8 @@
               dateString: $date.val(),
               text: $description.val()
             });
-            Object.keys(task).forEach(function(key) {
-              var value = task[key];
-              $preview.attr(key, value);
-            })
+            $preview.html(`<tasklist-item class="${task.class}" date-string="${task.dateString}" entry-date="${task.entryDate}" days-until="${task.daysUntil.string}" reference-date="${task.referenceDate.string}" interpeted-date="${task.interpetedDate.string}">${task.text}</tasklist-item>`);
+            Component.scanForComponents(document.getElementById('new-event-preview'))
           }
 
           $description.on('change', function(event) {
