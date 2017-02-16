@@ -47,11 +47,13 @@
     <tasklist-input></tasklist-input>
 
     <h2>Tasks</h2>
-    <p>Current timestamp: {{NOW}}</p>
     <tasklist data-source-url="./tasks/json"></tasklist>
 
     <h2>Local Data</h2>
+    <p>The following data is stored locally to your device:</p>
     <div id="local-data"></div>
+
+    <p>Current timestamp: {{NOW}}</p>
   </div>
 
 
@@ -147,7 +149,7 @@
               dateString: $date.val(),
               text: $description.val()
             });
-            $preview.html(`<tasklist-item class="${task.class}" date-string="${task.dateString}" entry-date="${task.entryDate}" days-until="${task.daysUntil.string}" reference-date="${task.referenceDate.string}" interpeted-date="${task.interpetedDate.string}">${task.text}</tasklist-item>`);
+            $preview.html(`<tasklist-item class="${task.class}" date-string="${task.dateString}" entry-date="${task.entryDate}" days-until="${task.daysUntil.string}" reference-date="${task.referenceDate.string}" interpeted-date="${task.interpetedDate.string}" local="${task.local}">${task.text}</tasklist-item>`);
             Component.scanForComponents(document.getElementById('new-event-preview'))
           }
 
@@ -170,6 +172,8 @@
             };
             addNewEntry(task);
             displayCookies();
+            $description.val('');
+            $date.val('');
           });
 
         });
@@ -178,6 +182,11 @@
 
     <template for="tasklist-item">
       <p>
+        {{#if local}}
+        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
+        {{else}}
+        <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
+        {{/if}}
         <b>{{days-until}}</b> : {{content}}, <i style="opacity: 0.3;">{{date-string}}</i>
         <span class="date">Interpretted: {{interpeted-date}}</span>
         <span class="date">Reference: {{reference-date}}</span>
@@ -203,10 +212,15 @@
       }
 
       tasklist-item>p {
-        padding: 4px;
+        padding: 6px 8px;
         border-radius: 5px;
         background: #999;
         margin: 0;
+      }
+
+      tasklist-item .glyphicon {
+        font-size: 110%;
+        vertical-align: text-top;
       }
 
       tasklist-item.past {
@@ -234,10 +248,10 @@
       }
 
       tasklist-item.past p {
-        background: #999;
+        background: #AAA;
       }
 
-      tasklist-item.unit-minute p, tasklist-item.unit-second p {
+      tasklist-item.unit-minute p, tasklist-item.unit-second p, tasklist-item.unit-millisecond p {
         background: #F96;
       }
 
@@ -248,7 +262,7 @@
 
     <template for="tasklist">
       {{#each tasks}}
-      <tasklist-item class="{{class}}" date-string="{{dateString}}" entry-date="{{entryDate}}" days-until="{{daysUntil.string}}" reference-date="{{referenceDate.string}}" interpeted-date="{{interpetedDate.string}}">{{text}}</tasklist-item>
+      <tasklist-item class="{{class}}" date-string="{{dateString}}" entry-date="{{entryDate}}" days-until="{{daysUntil.string}}" reference-date="{{referenceDate.string}}" interpeted-date="{{interpetedDate.string}}" local="{{local}}">{{text}}</tasklist-item>
       {{/each}}
     </template>
 
