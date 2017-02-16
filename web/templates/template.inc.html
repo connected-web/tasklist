@@ -86,6 +86,31 @@
     </template>
 
     <script for="shared" type="text/javascript">
+      String.prototype.hashCode = function() {
+        var hash = 0, i, chr, len;
+        if (this.length === 0) return hash;
+        for (i = 0, len = this.length; i < len; i++) {
+          chr   = this.charCodeAt(i);
+          hash  = ((hash << 5) - hash) + chr;
+          hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
+      };
+
+      function removeDuplicateTasks(tasks) {
+        var hashMap = {};
+        tasks.forEach(function(item) {
+          var hash = (item.text + item.dateString).hashCode();
+          hashMap[hash] = item;
+        });
+
+        result = [];
+        for(var key in hashMap) {
+          result.push(hashMap[key]);
+        }
+        return result;
+      }
+
       function enhanceTask(task) {
         task.referenceDate = new Date(task.entryDate * 1000);
         task.interpetedDate = interpretDate(task.referenceDate, task.dateString);
@@ -103,10 +128,19 @@
         return Cookies.read().tasklist || {};
       }
 
-      function writeLocalTasks(tasks) {
+      function writeLocalTasks(tasklist) {
+        tasklist.tasks = removeDuplicateTasks(tasklist.tasks);
         Cookies.write({
-          tasklist: tasks
+          tasklist: tasklist
         }, 100, '/tasklist');
+      }
+
+      function deleteTask(task) {
+        var tasklist = readLocalTasks();
+        tasklist.tasks = tasklist.tasks.filter(function(item) {
+          return item.text !== task.text;
+        });
+        writeLocalTasks(tasklist);
       }
 
       function displayCookies() {
@@ -122,6 +156,13 @@
           writeLocalTasks(localTasks);
           displayCookies();
         }
+      }
+
+      function renderTaskList() {
+        var Tasklist = Component.configure('tasklist');
+        Tasklist.apply(function(instance) {
+          instance.render();
+        });
       }
 
       displayCookies();
@@ -174,6 +215,7 @@
             displayCookies();
             $description.val('');
             $date.val('');
+            renderTaskList();
           });
 
         });
@@ -184,6 +226,7 @@
       <p>
         {{#if local}}
         <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
+        <span class="glyphicon glyphicon-trash delete button" aria-hidden="true"></span>
         {{else}}
         <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
         {{/if}}
@@ -192,6 +235,24 @@
         <span class="date">Reference: {{reference-date}}</span>
       </p>
     </template>
+
+    <script for="tasklist" type="text/javascript">
+      $(function() {
+        TasklistItem = Component.configure('tasklist-item');
+
+        TasklistItem.on('renderComplete', function(instance) {
+          $(instance.element).find('span.delete.button').on('click', function() {
+            console.log('Delete instance', '"' + instance['date-string'] + '"', '"' + instance.content + '"');
+            deleteTask({
+              dateString: instance['date-string'],
+              entryDate: instance['entry-date'],
+              text: instance.content
+            });
+            renderTaskList();
+          });
+        });
+      });
+    </script>
 
     <style for="tasklist-item">
       .row > .col-md-6 {
@@ -207,8 +268,20 @@
         display: none;
       }
 
-      tasklist-item:hover>p>span.date {
-        display: block;
+      tasklist-item>p>span.delete {
+        opacity: 0.1;
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        padding: 5px;
+      }
+
+      tasklist-item>p>span.delete:hover {
+        opacity: 1.0;
+      }
+
+      tasklist-item>p>span.delete:active {
+        color: white;
       }
 
       tasklist-item>p {
@@ -216,6 +289,7 @@
         border-radius: 5px;
         background: #999;
         margin: 0;
+        position: relative;
       }
 
       tasklist-item .glyphicon {
@@ -268,16 +342,20 @@
 
     <script for="tasklist" type="text/javascript">
       $(function() {
-        Tasklist = Component.configure('tasklist');
+        var Tasklist = Component.configure('tasklist');
 
         Tasklist.on('preRenderStep', function(instance) {
 
-          instance.tasks = instance.tasks || [];
+          instance.tasks = (instance.tasks || []).filter(function(task) {
+            return !task.local;
+          });
           var localTasks = readLocalTasks().tasks.forEach(function(task) {
             task.local = true;
             instance.tasks.push(task);
           });
           instance.tasks.forEach(enhanceTask);
+
+          instance.tasks = removeDuplicateTasks(instance.tasks);
 
           instance.tasks = instance.tasks.sort(function(a, b) {
             return a.interpetedDate.getTime() - b.interpetedDate.getTime();
