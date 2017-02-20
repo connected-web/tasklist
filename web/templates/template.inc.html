@@ -125,7 +125,9 @@
       }
 
       function readLocalTasks() {
-        return Cookies.read().tasklist || {};
+        var tasklist = Cookies.read().tasklist || {};
+        tasklist.tasks = tasklist.tasks || [];
+        return tasklist;
       }
 
       function writeLocalTasks(tasklist) {
