@@ -147,7 +147,9 @@
         var localData = readLocalTasks();
         $.get('./tasks/json', function (data) {
           var tasklist = {
-            tasks: removeDuplicateTasks([].concat(data.tasks, localData.tasks))
+            tasks: removeDuplicateTasks([].concat(data.tasks, localData.tasks)).sort(function(a, b) {
+              a.entryDate > b.entryDate
+            })
           };
           $('#merged-data').html('<pre>' + JSON.stringify(tasklist, null, 2) + '</pre>');
         });
