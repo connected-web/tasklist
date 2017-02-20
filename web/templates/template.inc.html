@@ -49,9 +49,9 @@
     <h2>Tasks</h2>
     <tasklist data-source-url="./tasks/json"></tasklist>
 
-    <h2>Local Data</h2>
-    <p>The following data is stored locally to your device:</p>
-    <div id="local-data"></div>
+    <h2>Merged Data</h2>
+    <p>The following data is a merge of data stored locally to your device and that returned remotely:</p>
+    <div id="merged-data"></div>
 
     <p>Current timestamp: {{NOW}}</p>
   </div>
@@ -143,9 +143,14 @@
         writeLocalTasks(tasklist);
       }
 
-      function displayCookies() {
+      function displayTasklistData() {
         var localData = readLocalTasks();
-        $('#local-data').html('<pre>' + JSON.stringify(localData, null, 2) + '</pre>');
+        $.get('./tasks/json', function (data) {
+          var tasklist = {
+            tasks: removeDuplicateTasks([].concat(data.tasks, localData.tasks))
+          };
+          $('#merged-data').html('<pre>' + JSON.stringify(tasklist, null, 2) + '</pre>');
+        });
       }
 
       function addNewEntry(task) {
@@ -154,7 +159,7 @@
         if (task.dateString && task.text) {
           localTasks.tasks.push(task);
           writeLocalTasks(localTasks);
-          displayCookies();
+          displayTasklistData();
         }
       }
 
@@ -165,7 +170,7 @@
         });
       }
 
-      displayCookies();
+      displayTasklistData();
     </script>
 
     <script for="tasklist-input" type="text/javascript">
@@ -212,7 +217,7 @@
               text: $description.val()
             };
             addNewEntry(task);
-            displayCookies();
+            displayTasklistData();
             $description.val('');
             $date.val('');
             renderTaskList();
