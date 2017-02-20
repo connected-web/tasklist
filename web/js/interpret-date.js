@@ -11,8 +11,8 @@
   var DayOfWeekMatcher = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)u?s?n?e?s?r?s?d?a?y?$/i;
   var MonthOfYearMatcher = /^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[ruarychileyustemober]*$/i;
   var DateInMonthMatcher = /^(\d\d?)[nrdsth]{2}$/i;
-  var TimeOfDayMatcher = /^(1?\d)(am|pm)$/i;
-  var ExactTimeOfDayMatcher = /^(1?\d):([0-6]\d)$/i;
+  var TimeOfDayMatcher = /^(1?\d):?([0-5]\d)?(am|pm)$/i;
+  var ExactTimeOfDayMatcher = /^(1?\d):([0-5]\d)$/i;
 
   var matchers = [{
     regex: ExactTimeOfDayMatcher,
@@ -64,11 +64,15 @@
   }
 
   function matchTimeOfDay(token, tokens, context) {
-    var time = Number.parseInt(token.match(TimeOfDayMatcher)[1]);
-    var amOrPm = token.match(TimeOfDayMatcher)[2].toLowerCase();
-    var hours = time + ((amOrPm === 'pm') ? 12 : 0);
+    var hours = Number.parseInt(token.match(TimeOfDayMatcher)[1]);
+    var minutes = Number.parseInt(token.match(TimeOfDayMatcher)[2]) || 0;
+    var amOrPm = token.match(TimeOfDayMatcher)[3].toLowerCase();
+    hours = hours + ((amOrPm === 'pm') ? 12 : 0);
 
-    return applyHours(hours);
+    return {
+      setUTCHours: hours,
+      setUTCMinutes: minutes
+    };
   }
 
   function matchDateInMonth(token, tokens, context) {

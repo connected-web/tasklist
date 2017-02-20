@@ -99,5 +99,7 @@ describe('Interpret Date', () => {
     test('11am', 'Sun, 12 Feb 2017 11:00:00 GMT');
     test('11pm', 'Sun, 12 Feb 2017 23:00:00 GMT');
     test('15:59', 'Sun, 12 Feb 2017 15:59:00 GMT');
+    test('5:15am', 'Sun, 12 Feb 2017 05:15:00 GMT');
+    test('5:45pm', 'Sun, 12 Feb 2017 17:45:00 GMT');
   })
 });
