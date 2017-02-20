@@ -93,4 +93,11 @@ describe('Interpret Date', () => {
     test('4pm on the 25th March', 'Sat, 25 Mar 2017 16:00:00 GMT');
     test('March 25th at 2am', 'Sat, 25 Mar 2017 02:00:00 GMT');
   });
+
+  describe('Time in day', () => {
+    test('11:23', 'Sun, 12 Feb 2017 11:23:00 GMT');
+    test('11am', 'Sun, 12 Feb 2017 11:00:00 GMT');
+    test('11pm', 'Sun, 12 Feb 2017 23:00:00 GMT');
+    test('15:59', 'Sun, 12 Feb 2017 15:59:00 GMT');
+  })
 });
