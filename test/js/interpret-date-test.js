@@ -90,5 +90,7 @@ describe('Interpret Date', () => {
     test('2nd February after lunch', 'Thu, 02 Feb 2017 13:00:00 GMT');
     test('1st March', 'Wed, 01 Mar 2017 08:00:00 GMT');
     test('23rd August', 'Wed, 23 Aug 2017 08:00:00 GMT');
+    test('4pm on the 25th March', 'Sat, 25 Mar 2017 16:00:00 GMT');
+    test('March 25th at 2am', 'Sat, 25 Mar 2017 02:00:00 GMT');
   });
 });
