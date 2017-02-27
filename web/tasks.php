@@ -12,10 +12,12 @@ else {
   $tasksCacheId = 'tasks';
   $fiveMinutes = 5 * 60;
   if(FileCache::ageOfCache($tasksCacheId) < $fiveMinutes) {
+    header('x-tasklist: Read from Cache');
     $tasks = FileCache::readDataFromCache($tasksCacheId);
   }
   else {
     // read and decode JSON file
+    header('x-tasklist: Read and decode JSON file');
     $json_file = @file_get_contents('https://rawgit.com/connected-web/tasklist/master/state/tasklist.json');
     $tasks = json_decode($json_file);
     FileCache::storeDataInCache($tasks, $tasksCacheId);
