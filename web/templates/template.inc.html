@@ -113,13 +113,14 @@
 
       function enhanceTask(task) {
         task.referenceDate = new Date(task.entryDate * 1000);
-        task.interpetedDate = interpretDate(task.referenceDate, task.dateString);
-        task.daysUntil = timeUntil(task.interpetedDate);
+        task.interpretedDate = interpretDate(task.referenceDate, task.dateString);
+        task.daysUntil = timeUntil(task.interpretedDate);
         task.unit = task.daysUntil.unit;
         task.past = task.daysUntil.past ? 'past' : 'future';
         task.class = ('unit-' + task.unit + ' ' + task.past).trim();
-        task.interpetedDate.string = task.interpetedDate.toUTCString();
+        task.interpretedDate.string = task.interpretedDate.toUTCString();
         task.referenceDate.string = task.referenceDate.toUTCString();
+        task.interpretedDate.dayOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][task.interpretedDate.getDay()];
 
         return task;
       }
@@ -199,7 +200,7 @@
               dateString: $date.val(),
               text: $description.val()
             });
-            $preview.html(`<tasklist-item class="${task.class}" date-string="${task.dateString}" entry-date="${task.entryDate}" days-until="${task.daysUntil.string}" reference-date="${task.referenceDate.string}" interpeted-date="${task.interpetedDate.string}" local="${task.local}">${task.text}</tasklist-item>`);
+            $preview.html(`<tasklist-item class="${task.class}" date-string="${task.dateString}" entry-date="${task.entryDate}" days-until="${task.daysUntil.string}" reference-date="${task.referenceDate.string}" interpreted-date="${task.interpretedDate.string}" interpreted-day-of-week="${task.interpretedDate.dayOfWeek}" local="${task.local}">${task.text}</tasklist-item>`);
             Component.scanForComponents(document.getElementById('new-event-preview'))
           }
 
@@ -233,14 +234,13 @@
 
     <template for="tasklist-item">
       <p>
+        <span class="day-of-week">{{interpreted-day-of-week}}</span>
         {{#if local}}
         <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
         <span class="glyphicon glyphicon-trash delete button" aria-hidden="true"></span>
-        {{else}}
-        <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
         {{/if}}
-        <b>{{days-until}}</b> : {{content}}, <i style="opacity: 0.3;">{{date-string}}</i>
-        <span class="date">Interpretted: {{interpeted-date}}</span>
+        <b>{{days-until}}</b> : {{content}}, <i style="opacity: 0.4;">{{date-string}}</i>
+        <span class="date">Interpretted: {{interpreted-date}}</span>
         <span class="date">Reference: {{reference-date}}</span>
       </p>
     </template>
@@ -294,11 +294,24 @@
       }
 
       tasklist-item>p {
-        padding: 6px 8px;
+        padding: 4px 4px;
         border-radius: 5px;
         background: #999;
         margin: 0;
         position: relative;
+      }
+
+      tasklist-item .day-of-week {
+        border-radius: 3px;
+        background: rgba(255,255,255,0.4);
+        padding: 4px;
+        text-transform: uppercase;
+        width: 32px;
+        font-size: 10px;
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+        margin-right: 8px;
       }
 
       tasklist-item .glyphicon {
@@ -345,7 +358,7 @@
 
     <template for="tasklist">
       {{#each tasks}}
-      <tasklist-item class="{{class}}" date-string="{{dateString}}" entry-date="{{entryDate}}" days-until="{{daysUntil.string}}" reference-date="{{referenceDate.string}}" interpeted-date="{{interpetedDate.string}}" local="{{local}}">{{text}}</tasklist-item>
+      <tasklist-item class="{{class}}" date-string="{{dateString}}" entry-date="{{entryDate}}" days-until="{{daysUntil.string}}" reference-date="{{referenceDate.string}}" interpreted-date="{{interpretedDate.string}}" interpreted-day-of-week="{{interpretedDate.dayOfWeek}}" local="{{local}}">{{text}}</tasklist-item>
       {{/each}}
     </template>
 
@@ -367,7 +380,7 @@
           instance.tasks = removeDuplicateTasks(instance.tasks);
 
           instance.tasks = instance.tasks.sort(function(a, b) {
-            return a.interpetedDate.getTime() - b.interpetedDate.getTime();
+            return a.interpretedDate.getTime() - b.interpretedDate.getTime();
           });
 
         });
