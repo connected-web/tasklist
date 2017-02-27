@@ -11,8 +11,8 @@ else {
   // read from cache
   $tasksCacheId = 'tasks';
   $fiveMinutes = 5 * 60;
-  if(FileCache::ageOfCache($tasksCacheId) < $fiveMinutes) {
-    header('x-tasklist: Read from Cache');
+  if(FileCache::ageOfCache($tasksCacheId) < $fiveMinutes && FileCache::ageOfCache($tasksCacheId) !== false) {
+    header('x-tasklist: Read from Cache ' . FileCache::ageOfCache($tasksCacheId));
     $tasks = FileCache::readDataFromCache($tasksCacheId);
   }
   else {
