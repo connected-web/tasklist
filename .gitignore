@@ -1,3 +1,7 @@
 node_modules
 scripts/deploy/.ftppass
 web/data/tasks.cache
+web/auth/composer
+web/auth/composer.lock
+web/auth/vendor
+web/auth/secrets.php

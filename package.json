@@ -10,7 +10,8 @@
   },
   "scripts": {
     "start": "node app.js",
-    "test": "mocha test/**/*.js --recursive"
+    "test": "mocha test/**/*.js --recursive",
+    "setup": "./scripts/setup/installComposer.sh && cd web/auth && php composer install"
   },
   "dependencies": {},
   "devDependencies": {

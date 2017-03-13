@@ -1,0 +1,20 @@
+{
+    "name": "tasklist/web/auth",
+    "description": "Multi-provider authentication framework for PHP",
+    "type": "authentication",
+    "keywords": ["tasklist", "authentication", "auth", "oauth", "openid", "omniauth", "facebook", "google", "twitter"],
+    "homepage": "https://mkv25.net/tasklist",
+    "license": "ISC",
+    "authors": [{
+        "name": "John Beech",
+        "email": "tasklist@mkv25.net",
+        "homepage": "https://mkv25.net/tasklist"
+    }],
+    "require": {
+        "php": ">=5.2.0",
+        "opauth/opauth": "*",
+        "opauth/facebook": "*",
+        "opauth/google": "*",
+        "opauth/twitter": "*"
+    }
+}
