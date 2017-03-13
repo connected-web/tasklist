@@ -7,7 +7,7 @@ module.exports = function(grunt) {
   // files to upload and exclude
   var FTP_LOCAL_FOLDER = "../../web";
   var FTP_DEST_FOLDER = "";
-  var FTP_EXCLUSIONS_COMMON = ['.ftp*', '.git*', '.hta*', 'deploy', '*.fdproj', 'tasklist.md', 'readme.md', '.sublime'];
+  var FTP_EXCLUSIONS_COMMON = ['.ftp*', '.git*', '.hta*', 'deploy', '*.fdproj', 'tasklist.md', 'readme.md', '.sublime', 'composer', 'composer.lock'];
 
   // auth details for live
   var FTP_LIVE_AUTH = {
@@ -19,17 +19,6 @@ module.exports = function(grunt) {
   // load plugins
   grunt.loadNpmTasks('grunt-ftp-deploy');
   grunt.loadNpmTasks('grunt-debug-task');
-
-  function ftpStageConfigFor(path, exclusions) {
-    exclusions = exclusions || [];
-    return {
-      auth: FTP_STAGE_AUTH,
-      src: FTP_LOCAL_FOLDER + path,
-      dest: FTP_DEST_FOLDER + path,
-      exclusions: [].concat(FTP_EXCLUSIONS_COMMON, exclusions),
-      forceVerbose: true
-    };
-  }
 
   // Project configuration.
   grunt.initConfig({
