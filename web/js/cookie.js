@@ -20,11 +20,15 @@
 
   function expiryString(expdays) {
     expdays = expdays || 365;
-    var cookiesString = "";
     var d = new Date();
     d.setTime(d.getTime() + (expdays * 24 * 60 * 60 * 1000));
 
-    return d.toUTCString();
+    console.log('Expiry string', d.toUTCString(), 'Days', expdays)
+    return ';expires=' + d.toUTCString();
+  }
+
+  function pathString(path) {
+    return ';path=' + path;
   }
 
   function writeCookies(cookies, expdays, path) {
@@ -34,7 +38,7 @@
     for (var key in cookies) {
       if (cookies.hasOwnProperty(key)) {
         var value = cookies[key];
-        document.cookie = key + '=' + encodeURIComponent(JSON.stringify(value)) + ';' + expiryString(expdays) + ';path=' + path;
+        document.cookie = key + '=' + encodeURIComponent(JSON.stringify(value)) + expiryString(expdays) + pathString(path);
       }
     }
   }
