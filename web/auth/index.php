@@ -7,7 +7,7 @@
  *
  */
 
-require(__dirname(__FILE___).'/vendor/autoload.php')
+require(__dirname(__FILE___).'/vendor/autoload.php');
 
 /**
  * Define paths
