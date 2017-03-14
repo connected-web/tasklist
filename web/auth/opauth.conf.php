@@ -1,6 +1,6 @@
 <?php
 
-require('./secrets.php')
+require('./secrets.php');
 
 $config = array(
 /**
