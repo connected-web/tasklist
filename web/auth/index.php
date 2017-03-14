@@ -7,7 +7,7 @@
  *
  */
 
-require(dirname(__FILE___).'/vendor/autoload.php');
+require(dirname(__FILE__).'/vendor/autoload.php');
 
 /**
  * Define paths
@@ -23,18 +23,37 @@ if (!file_exists(CONF_FILE)){
 }
 require CONF_FILE;
 
+function displayErrors($data) {
+  return json_encode($data, JSON_PRETTY_PRINT);
+}
+
+function handleErrors($errno, $errstr, $errfile, $errline, $errcontext) {
+  $setupErrors[] = array(
+    'no' => $errno,
+    'str' => $errstr,
+    'file' => $errfile,
+    'line' => $errline,
+    'context' => $errcontext
+  );
+}
+
 /**
  * Instantiate Opauth with the loaded config
  */
+$setupErrors = array();
+set_error_handler(handleErrors);
 $Opauth = new Opauth( $config );
+restore_error_handler();
+
 ?>
 <html>
 <body>
+  <pre><?php displayErrors($setupErrors); ?></pre>
 	<p>Log in with:</p>
 	<ul>
-		<li><a href="/facebook">Facebook</a></li>
-		<li><a href="/google">Google</a></li>
-		<li><a href="/twitter">Twitter</a></li>
+		<li><a href="./facebook">Facebook</a></li>
+		<li><a href="./google">Google</a></li>
+		<li><a href="./twitter">Twitter</a></li>
 	</ul>
 </body>
 </html>

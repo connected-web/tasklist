@@ -1,6 +1,6 @@
 <?php
 
-require('./secrets.php');
+require(dirname(__FILE__).'/secrets.php');
 
 $config = array(
 /**
