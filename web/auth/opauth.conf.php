@@ -42,5 +42,10 @@ $config = array(
 			'secret' => $TWITTER_AUTH_SECRET
 		),
 
+    'GitHub' => array(
+      'client_id' => $GITHUB_CLIENT_ID,
+      'client_secret' => $GITHUB_CLIENT_SECRET
+    )
+
 	),
 );
