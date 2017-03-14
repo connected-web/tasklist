@@ -15,6 +15,7 @@
         "opauth/opauth": "*",
         "opauth/facebook": "*",
         "opauth/google": "*",
+        "opauth/github": "*",
         "opauth/twitter": "*"
     }
 }
