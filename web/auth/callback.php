@@ -1,23 +1,23 @@
 <?php
 /**
  * Callback for Opauth
- * 
+ *
  * This file (callback.php) provides an example on how to properly receive auth response of Opauth.
- * 
+ *
  * Basic steps:
  * 1. Fetch auth response based on callback transport parameter in config.
  * 2. Validate auth response
- * 3. Once auth response is validated, your PHP app should then work on the auth response 
+ * 3. Once auth response is validated, your PHP app should then work on the auth response
  *    (eg. registers or logs user in to your site, save auth data onto database, etc.)
- * 
+ *
  */
 
+require(dirname(__FILE___).'/vendor/autoload.php');
 
 /**
  * Define paths
  */
 define('CONF_FILE', dirname(__FILE__).'/'.'opauth.conf.php');
-define('OPAUTH_LIB_DIR', dirname(__FILE__).'/lib/Opauth/');
 
 /**
 * Load config
@@ -31,16 +31,15 @@ require CONF_FILE;
 /**
  * Instantiate Opauth with the loaded config but not run automatically
  */
-require OPAUTH_LIB_DIR.'Opauth.php';
 $Opauth = new Opauth( $config, false );
 
-	
+
 /**
 * Fetch auth response, based on transport configuration for callback
 */
 $response = null;
 
-switch($Opauth->env['callback_transport']){	
+switch($Opauth->env['callback_transport']){
 	case 'session':
 		session_start();
 		$response = $_SESSION['opauth'];
@@ -66,8 +65,8 @@ if (array_key_exists('error', $response)){
 
 /**
  * Auth response validation
- * 
- * To validate that the auth response received is unaltered, especially auth response that 
+ *
+ * To validate that the auth response received is unaltered, especially auth response that
  * is sent through GET or POST.
  */
 else{
