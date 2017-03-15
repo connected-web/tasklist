@@ -7,7 +7,7 @@ module.exports = function(grunt) {
   // files to upload and exclude
   var FTP_LOCAL_FOLDER = "../../web";
   var FTP_DEST_FOLDER = "";
-  var FTP_EXCLUSIONS_COMMON = ['.ftp*', '.git*', '.hta*', 'deploy', '*.fdproj', 'tasklist.md', 'readme.md', '.sublime', 'composer', 'composer.lock', '.DS_Store'];
+  var FTP_EXCLUSIONS_COMMON = ['.ftp*', '.git*', '.hta*', 'deploy', '*.fdproj', 'tasklist.md', 'readme.md', '.sublime', 'composer.phar', 'composer.lock', '.DS_Store'];
 
   // auth details for live
   var FTP_LIVE_AUTH = {
