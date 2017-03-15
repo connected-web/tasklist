@@ -90,5 +90,5 @@ else{
 * Auth response dump
 */
 echo "<pre>";
-print_r($response);
+json_encode($response, JSON_PRETTY_PRINT);
 echo "</pre>";
