@@ -51,9 +51,10 @@ restore_error_handler();
   <pre><?php displayErrors($setupErrors); ?></pre>
 	<p>Log in with:</p>
 	<ul>
-		<li><a href="./facebook">Facebook</a></li>
-		<li><a href="./google">Google</a></li>
-		<li><a href="./twitter">Twitter</a></li>
+		<li><a href="./facebook" class="login facebook">Facebook</a></li>
+		<li><a href="./google" class="login google">Google</a></li>
+		<li><a href="./twitter" class="login twitter">Twitter</a></li>
+		<li><a href="./github" class="login github">Github</a></li>
 	</ul>
 </body>
 </html>
