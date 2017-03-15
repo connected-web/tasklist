@@ -59,7 +59,10 @@ switch($Opauth->env['callback_transport']){
 /**
  * Check if it's an error callback
  */
-if (array_key_exists('error', $response)){
+if (!is_array($response)) {
+	echo '<strong style="color: red;">Authentication error: </strong> Opauth response was not in the expected format.'."<br>\n";
+}
+else if(array_key_exists('error', $response)){
 	echo '<strong style="color: red;">Authentication error: </strong> Opauth returns error auth response.'."<br>\n";
 }
 
@@ -85,10 +88,9 @@ else{
 	}
 }
 
-
 /**
 * Auth response dump
 */
 echo "<pre>";
-json_encode($response, JSON_PRETTY_PRINT);
+echo json_encode($response, JSON_PRETTY_PRINT);
 echo "</pre>";
