@@ -11,7 +11,7 @@
   "scripts": {
     "start": "node app.js",
     "test": "mocha test/**/*.js --recursive",
-    "setup": "./scripts/setup/installComposer.sh && cd web/auth && php composer install"
+    "setup": "./scripts/setup/installComposer.sh && rm web/auth/composer.lock && cd web/auth && php composer install"
   },
   "dependencies": {},
   "devDependencies": {
