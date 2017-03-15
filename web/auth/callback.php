@@ -83,8 +83,18 @@ else{
 		echo '<strong style="color: green;">OK: </strong>Auth response is validated.'."<br>\n";
 
 		/**
-		 * It's all good. Go ahead with your application-specific authentication logic
+		 * Store auth info on session
 		 */
+
+    if(!session_id()) {
+      session_start();
+    }
+
+    $_SESSION['mkv25_tasklist_auth'] = array(
+      'uid' => $response['auth']['uid'],
+      'info' => $response['auth']['info'],
+      'provider' => $response['auth']['provider']
+    );
 	}
 }
 
