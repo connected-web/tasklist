@@ -43,6 +43,8 @@
 
   <div class="container theme-showcase" role="main">
 
+    <login data-source-url="./auth-info/json"></login>
+
     <h2>Add task</h1>
     <tasklist-input></tasklist-input>
 
@@ -58,6 +60,17 @@
 
 
   <div class="templates">
+
+    <template for="login">
+      {{#if auth}}
+        <h1>Welcome {{auth.info.nickname}}</h1>
+        <p>You are logged in using {{auth.provider}}, things are cool.</p>
+      {{else}}
+        <h1>Login</h1>
+        <p>A terrible thing has occurred: {{message}}</p>
+      {{/if}}
+      <pre>{{dataSourceData}}</pre>
+    </template>
 
     <template for="tasklist-input">
       <form>

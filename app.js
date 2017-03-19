@@ -28,6 +28,13 @@ app.get('/tasklist/tasks/json', function (req, res) {
   res.json(tasklist)
 })
 
+app.get('/tasklist/auth-info/json', function (req, res) {
+  res.json({
+    auth: false,
+    message: 'Auth info unavailable; please select an appropriate provider'
+  })
+})
+
 const port = 8000;
 app.listen(port, function () {
   console.log(`Taklist listening on http://localhost:${port}/tasklist/`)
