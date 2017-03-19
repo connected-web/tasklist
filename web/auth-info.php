@@ -5,7 +5,10 @@ $auth = $_SESSION['mkv25_tasklist_auth'];
 
 // add session info
 if($auth) {
-  $result = $auth;
+  $result = array(
+    'auth' => $auth,
+    'message' => 'Auth info found; you have been logged in!'
+  );
 }
 else {
   $result = array(
