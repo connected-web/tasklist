@@ -4,7 +4,7 @@ session_start();
 $auth = $_SESSION['mkv25_tasklist_auth'];
 
 // add session info
-if($auth && isset($auth['auth'])) {
+if($auth) {
   $result = $auth;
 }
 else {
