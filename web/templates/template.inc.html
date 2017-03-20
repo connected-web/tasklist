@@ -84,7 +84,7 @@
         Auth = Component.configure('auth');
 
         function findName(start) {
-          return (start && start.info && start.info.first_name || start.info.nickname || start.info.name) || '????' 
+          return (start && start.info && (start.info.first_name || start.info.nickname || start.info.name)) || '????'
         }
 
         Auth.on('preRenderStep', function(instance) {
