@@ -72,11 +72,13 @@
         <h1>Sign in...</h1>
         <p>Please sign in with one of the following providers:</p>
       {{/if}}
-      <div class="providers">
-      {{#each providers}}
-        <a href="{{url}}" class="logo {{id}}" title="{{label}}"><b class="hidden">{{label}}</b></a>
-      {{/each}}
-      </div>
+      {{#if providers}}
+        <div class="providers">
+        {{#each providers}}
+          <a href="{{url}}" class="logo {{id}}" title="{{label}}"><b class="hidden">{{label}}</b></a>
+        {{/each}}
+        </div>
+      {{/if}}
     </template>
 
     <script for="auth" type="text/javascript">
