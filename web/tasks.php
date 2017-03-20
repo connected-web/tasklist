@@ -3,7 +3,7 @@
 require('./php/FileCache.class.php');
 
 session_start();
-$auth = $_SESSION['mkv25_tasklist_auth'];
+$auth = isset($_SESSION['mkv25_tasklist_auth']) ? $_SESSION['mkv25_tasklist_auth'] : false;
 
 if(isset($_GET['local'])) {
   // read from local file

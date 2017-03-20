@@ -1,19 +1,38 @@
 <?php
 
 session_start();
-$auth = $_SESSION['mkv25_tasklist_auth'];
+$auth = isset($_SESSION['mkv25_tasklist_auth']) ? $_SESSION['mkv25_tasklist_auth'] : false;
+
+function provider($label, $id) {
+  return array(
+    'label' => $label,
+    'id' => $id,
+    'url' => './auth/' . $id
+  );
+}
 
 // add session info
 if($auth) {
   $result = array(
     'auth' => $auth,
-    'message' => 'Auth info found; you have been logged in!'
+    'message' => 'Auth info found; you have been logged in!',
+    'providers' => array(
+      'label' => 'Logout',
+      'id' => 'logout',
+      'url' => './auth-logout'
+    )
   );
 }
 else {
   $result = array(
     'auth' => false,
-    'message' => 'Auth info unavailable; please select an appropriate provider'
+    'message' => 'Auth info unavailable; please select an appropriate provider',
+    'providers' => array(
+      provider('Facebook', 'facebook'),
+      provider('Twitter', 'twitter'),
+      provider('Google', 'google'),
+      provider('GitHub', 'github')
+    )
   );
 }
 

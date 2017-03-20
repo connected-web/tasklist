@@ -1,7 +1,5 @@
 RewriteEngine  on
-RewriteCond %{HTTP_HOST} ^stage.mkv25.net|mkv25.net$
 RewriteRule tasks/json tasks.php [NC]
 
 RewriteEngine  on
-RewriteCond %{HTTP_HOST} ^stage.mkv25.net|mkv25.net$
 RewriteRule auth-info/json auth-info.php [NC]
