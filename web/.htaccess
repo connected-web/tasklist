@@ -2,6 +2,9 @@ RewriteEngine  on
 RewriteRule tasks/json tasks.php [NC]
 
 RewriteEngine  on
+RewriteRule store store.php [NC]
+
+RewriteEngine  on
 RewriteRule auth/status/json auth/status.php [NC]
 
 RewriteEngine  on

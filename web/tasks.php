@@ -5,33 +5,24 @@ require('./php/FileCache.class.php');
 session_start();
 $auth = isset($_SESSION['mkv25_tasklist_auth']) ? $_SESSION['mkv25_tasklist_auth'] : false;
 
-if(isset($_GET['local'])) {
-  // read from local file
-  $json_file = str_replace('\r', '', file_get_contents(__DIR__ . '/../state/tasklist.json'));
-  $tasks = json_decode($json_file);
-}
-else {
+if($auth) {
   // read from cache
-  $tasksCacheId = 'tasks';
-  $fiveMinutes = 5 * 60;
-  if(FileCache::ageOfCache($tasksCacheId) < $fiveMinutes && FileCache::ageOfCache($tasksCacheId) !== false) {
-    header('x-tasklist: Read from Cache ' . FileCache::ageOfCache($tasksCacheId));
-    $tasks = FileCache::readDataFromCache($tasksCacheId);
-  }
-  else {
-    // read and decode JSON file
-    header('x-tasklist: Read and decode JSON file');
-    $json_file = @file_get_contents('https://rawgit.com/connected-web/tasklist/master/state/tasklist.json');
-    $tasks = json_decode($json_file);
-    FileCache::storeDataInCache($tasks, $tasksCacheId);
-  }
+  $tasksCacheId = 'tasks-' . $auth['provider'] . '-' . $auth['uid'];
+  $tasks = FileCache::readDataFromCache($tasksCacheId);
 }
+
+/*
+  header('x-tasklist: Read and decode JSON file');
+   $json_file = @file_get_contents('https://rawgit.com/connected-web/tasklist/master/state/tasklist.json');
+   $tasks = json_decode($json_file);
+   FileCache::storeDataInCache($tasks, $tasksCacheId);
+*/
 
 // minimum response
 if(!$tasks) {
   $tasks = array(
     array(
-      'text' => 'No tasks available',
+      'text' => 'No tasks entered',
       'dateString' => 'Today',
       'entryDate' => time()
     )
