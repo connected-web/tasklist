@@ -69,7 +69,9 @@
         <h1>Login</h1>
         <p>A terrible thing has occurred: {{message}}</p>
       {{/if}}
-      <pre>{{dataSourceData}}</pre>
+      {{#each providers}}
+        <p><a href="{{url}}" class="icon {{id}}">{{label}}</a></p>
+      {{/each}}
     </template>
 
     <template for="tasklist-input">
