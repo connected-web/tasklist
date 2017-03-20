@@ -85,8 +85,13 @@
       $(function() {
         Auth = Component.configure('auth');
 
+        function first(string) {
+          string = string || '';
+          return string.split(' ')[0];
+        }
+
         function findName(start) {
-          return (start && start.info && (start.info.first_name || start.info.nickname || start.info.name)) || '????'
+          return first(start && start.info && (start.info.first_name || start.info.name || start.info.nickname)) || '????';
         }
 
         Auth.on('preRenderStep', function(instance) {
