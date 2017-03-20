@@ -2,4 +2,7 @@ RewriteEngine  on
 RewriteRule tasks/json tasks.php [NC]
 
 RewriteEngine  on
-RewriteRule auth-info/json auth-info.php [NC]
+RewriteRule auth/status/json auth/status.php [NC]
+
+RewriteEngine  on
+RewriteRule auth/forget auth/forget.php [NC]

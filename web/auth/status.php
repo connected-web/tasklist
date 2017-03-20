@@ -15,12 +15,12 @@ function provider($label, $id) {
 if($auth) {
   $result = array(
     'auth' => $auth,
-    'message' => 'Auth info found; you have been logged in!',
+    'message' => 'Auth info found; you have been signed in!',
     'providers' => array(
       array(
-        'label' => 'Logout',
-        'id' => 'logout',
-        'url' => './auth-logout'
+        'label' => 'Sign out',
+        'id' => 'sign-out',
+        'url' => './auth/forget'
       )
     )
   );
@@ -28,7 +28,7 @@ if($auth) {
 else {
   $result = array(
     'auth' => false,
-    'message' => 'Auth info unavailable; please select an appropriate provider',
+    'message' => 'Auth info unavailable; please select an appropriate provider.',
     'providers' => array(
       provider('Facebook', 'facebook'),
       provider('Twitter', 'twitter'),
