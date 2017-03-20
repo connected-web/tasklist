@@ -66,8 +66,8 @@
         <h1>Welcome {{auth.info.nickname}}</h1>
         <p>You are logged in using {{auth.provider}}, things are cool.</p>
       {{else}}
-        <h1>Login</h1>
-        <p>A terrible thing has occurred: {{message}}</p>
+        <h1>Sign in...</h1>
+        <p>{{message}}</p>
       {{/if}}
       {{#each providers}}
         <p><a href="{{url}}" class="icon {{id}}">{{label}}</a></p>

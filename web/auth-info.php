@@ -17,9 +17,11 @@ if($auth) {
     'auth' => $auth,
     'message' => 'Auth info found; you have been logged in!',
     'providers' => array(
-      'label' => 'Logout',
-      'id' => 'logout',
-      'url' => './auth-logout'
+      array(
+        'label' => 'Logout',
+        'id' => 'logout',
+        'url' => './auth-logout'
+      )
     )
   );
 }
