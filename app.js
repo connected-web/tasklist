@@ -5,6 +5,8 @@ const app = express()
 const fs = require('fs')
 const utf8 = 'utf8'
 
+var stubAuth = false;
+
 app.get('/tasklist/', function (req, res) {
   if (req.originalUrl !== '/tasklist/') {
     return res.redirect(301, '/tasklist/')
@@ -18,7 +20,7 @@ app.get('/tasklist/', function (req, res) {
   res.send(output)
 })
 
-app.use('/tasklist/', express.static(path.join(__dirname, 'web')))
+app.use('/tasklist', express.static(path.join(__dirname, 'web')))
 
 const tasklist = {
   tasks: require(path.join(__dirname, 'state', 'tasklist.json'))
@@ -28,14 +30,58 @@ app.get('/tasklist/tasks/json', function (req, res) {
   res.json(tasklist)
 })
 
-app.get('/tasklist/auth-info/json', function (req, res) {
-  res.json({
-    auth: false,
-    message: 'Auth info unavailable; please select an appropriate provider'
-  })
+function provider(label, id) {
+  return {
+    label,
+    id,
+    url: `/tasklist/auth/${id}`
+  }
+}
+
+app.get('/tasklist/auth/status/json', function (req, res) {
+  var result;
+  if (stubAuth) {
+    result = {
+      auth: stubAuth,
+      message: 'Stubbed auth info found; you have been signed in!',
+      providers: [{
+        label: 'Sign out',
+        id: 'sign-out',
+        url: './auth/forget'
+      }]
+    }
+  } else {
+    result = {
+      auth: false,
+      message: 'Auth info unavailable; please select an appropriate provider',
+      providers: [
+        provider('Facebook', 'facebook'),
+        provider('Twitter', 'twitter'),
+        provider('Google', 'google'),
+        provider('GitHub', 'github')
+      ]
+    }
+  }
+  res.json(result)
+})
+
+app.get('/tasklist/auth/forget', function (req, res) {
+  stubAuth = false
+  res.redirect('/tasklist')
+})
+
+app.get('/tasklist/auth/:provider', function (req, res) {
+  stubAuth = {
+    info: {
+      name: 'Stub User',
+      nickname: 'stubby'
+    },
+    provider: `Stub ${req.params.provider}`
+  }
+  res.redirect('/tasklist')
 })
 
 const port = 8000;
 app.listen(port, function () {
   console.log(`Taklist listening on http://localhost:${port}/tasklist/`)
-});
+})
