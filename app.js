@@ -53,7 +53,7 @@ app.get('/tasklist/auth/status/json', function (req, res) {
   } else {
     result = {
       auth: false,
-      message: 'Auth info unavailable; please select an appropriate provider',
+      message: 'Auth info unavailable; please sign in using an appropriate provider.',
       providers: [
         provider('Facebook', 'facebook'),
         provider('Twitter', 'twitter'),

@@ -20,6 +20,9 @@
   <!-- Markdown support -->
   <script src="./external/marked.min.js"></script>
 
+  <!-- Social icons -->
+  <link rel="stylesheet" href="./css/social-icons.css">
+
   <!-- Code highlighting support -->
   <link rel="stylesheet" href="./external/github.min.css">
   <script src="./external/highlight.min.js"></script>
@@ -43,7 +46,7 @@
 
   <div class="container theme-showcase" role="main">
 
-    <login data-source-url="./auth/status/json"></login>
+    <auth data-source-url="./auth/status/json"></auth>
 
     <h2>Add task</h1>
     <tasklist-input></tasklist-input>
@@ -61,18 +64,47 @@
 
   <div class="templates">
 
-    <template for="login">
+    <template for="auth">
       {{#if auth}}
         <h1>Welcome {{auth.info.nickname}}</h1>
-        <p>You are logged in using {{auth.provider}}, things are cool.</p>
+        <p>You are signed in using {{auth.provider}}, things are cool.</p>
       {{else}}
         <h1>Sign in...</h1>
-        <p>{{message}}</p>
+        <p>Please sign in with one of the following providers:</p>
       {{/if}}
+      <div class="providers">
       {{#each providers}}
-        <p><a href="{{url}}" class="icon {{id}}">{{label}}</a></p>
+        <a href="{{url}}" class="logo {{id}}" title="{{label}}"><b class="hidden">{{label}}</b></a>
       {{/each}}
+      </div>
     </template>
+
+    <style for="auth">
+      .hidden {
+        display: none;
+      }
+      .providers {
+        display: inline-block;
+        border-radius: 12px;
+        background: #CCC;
+        padding: 6px;
+        font-size: 0;
+      }
+      .providers > .logo {
+        border-radius: 6px;
+        margin: 0 6px 0 0;
+        opacity: 0.5;
+      }
+      .providers > .logo:hover {
+        opacity: 1.0;
+      }
+      .providers > .logo:active {
+        opacity: 0.7;
+      }
+      .providers > .logo:last-child {
+        margin: 0;
+      }
+    </style>
 
     <template for="tasklist-input">
       <form>

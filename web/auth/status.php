@@ -28,7 +28,7 @@ if($auth) {
 else {
   $result = array(
     'auth' => false,
-    'message' => 'Auth info unavailable; please select an appropriate provider.',
+    'message' => 'Auth info unavailable; please sign in using an appropriate provider.',
     'providers' => array(
       provider('Facebook', 'facebook'),
       provider('Twitter', 'twitter'),
