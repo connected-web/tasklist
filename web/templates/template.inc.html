@@ -66,7 +66,7 @@
 
     <template for="auth">
       {{#if auth}}
-        <h1>Welcome {{auth.info.nickname}} {{auth.info.name}}</h1>
+        <h1>Welcome {{auth.name}}</h1>
         <p>You are signed in using {{auth.provider}}, things are cool.</p>
       {{else}}
         <h1>Sign in...</h1>
@@ -78,6 +78,21 @@
       {{/each}}
       </div>
     </template>
+
+    <script for="auth" type="text/javascript">
+      $(function() {
+        Auth = Component.configure('auth');
+
+        function findName(start) {
+          return (start && start.info && start.info.first_name || start.info.nickname || start.info.name) || '????' 
+        }
+
+        Auth.on('preRenderStep', function(instance) {
+          instance.auth = instance.auth || {};
+          instance.auth.name = findName(instance.auth);
+        });
+      });
+    </script>
 
     <style for="auth">
       .hidden {
