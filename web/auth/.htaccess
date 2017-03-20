@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine  on
+	RewriteRule status/json status.php [NC]
+
+	RewriteEngine  on
+	RewriteRule forget forget.php [NC]
+
+	RewriteEngine On
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^(.*)$ index.php [QSA,L,NC]
+</IfModule>

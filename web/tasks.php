@@ -2,6 +2,9 @@
 
 require('./php/FileCache.class.php');
 
+session_start();
+$auth = isset($_SESSION['mkv25_tasklist_auth']) ? $_SESSION['mkv25_tasklist_auth'] : false;
+
 if(isset($_GET['local'])) {
   // read from local file
   $json_file = str_replace('\r', '', file_get_contents(__DIR__ . '/../state/tasklist.json'));
@@ -26,17 +29,33 @@ else {
 
 // minimum response
 if(!$tasks) {
-  $tasks = (Array(
-    Array(
+  $tasks = array(
+    array(
       'text' => 'No tasks available',
       'dateString' => 'Today',
       'entryDate' => time()
     )
-  ));
+  );
 }
 
 // wrap tasks in object
 $result = Array('tasks' => $tasks);
+
+// add session info
+if($auth) {
+  $result['tasks'][] = array(
+    'text' => 'Session storage available',
+    'dateString' => 'Today',
+    'entryDate' => time()
+  );
+}
+else {
+  $result['tasks'][] = array(
+    'text' => 'Session storage unavailable',
+    'dateString' => 'Today',
+    'entryDate' => time()
+  );
+}
 
 // outpout JSON file
 header('Content-Type: application/json');

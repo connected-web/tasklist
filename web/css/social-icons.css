@@ -1,0 +1,26 @@
+.facebook {
+    background: url('../images/icons/facebook.png') no-repeat;
+}
+
+.github {
+    background: url('../images/icons/github.png') no-repeat;
+}
+
+.google {
+    background: url('../images/icons/google.png') no-repeat;
+}
+
+.twitter {
+    background: url('../images/icons/twitter.png') no-repeat;
+}
+
+.sign-out {
+    background: url('../images/icons/signout.png') no-repeat;
+}
+
+.logo {
+    display: inline-block;
+    background-size: contain;;
+    width: 46px;
+    height: 46px;
+}
