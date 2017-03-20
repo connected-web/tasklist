@@ -72,7 +72,7 @@ else if(array_key_exists('error', $response)){
  * To validate that the auth response received is unaltered, especially auth response that
  * is sent through GET or POST.
  */
-else{
+else {
 	if (empty($response['auth']) || empty($response['timestamp']) || empty($response['signature']) || empty($response['auth']['provider']) || empty($response['auth']['uid'])){
 		echo '<strong style="color: red;">Invalid auth response: </strong>Missing key auth response components.'."<br>\n";
 	}
@@ -80,6 +80,7 @@ else{
 		echo '<strong style="color: red;">Invalid auth response: </strong>'.$reason.".<br>\n";
 	}
 	else{
+    header( 'Location: /tasklist/' );
 		echo '<strong style="color: green;">OK: </strong>Auth response is validated.'."<br>\n";
 
 		/**
