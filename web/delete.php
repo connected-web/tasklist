@@ -26,7 +26,7 @@ if($auth) {
     $updatedTasks = array();
     $success = false;
     foreach($tasks as $index => $task) {
-      if(round($task['entryDate'], 2) == round($entryDate, 2) && $task['dateString'] == $dateString && $task['text'] == $text) {
+      if($task['dateString'] == $dateString && $task['text'] == $text) {
         // remove this task
         $success = true;
       }
@@ -36,11 +36,13 @@ if($auth) {
     }
 
     // write to cache
-    FileCache::storeDataInCache($updatedTasks, $tasksCacheId);
+    if($success) {
+      FileCache::storeDataInCache($updatedTasks, $tasksCacheId);
+    }
 
     // report back
     $result = array(
-      'message' => ($success) ? 'Entry has been removed from the user cache' : 'Unable to find matching entry in cache',
+      'message' => ($success) ? 'Entry has been removed from the user cache' : 'Unable to find a matching entry in the user cache',
       'data' => array(
         'entryDate' => $entryDate,
         'dateString' => $dateString,
