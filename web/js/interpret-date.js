@@ -13,6 +13,8 @@
   var DateInMonthMatcher = /^(\d\d?)[nrdsth]{2}$/i;
   var TimeOfDayMatcher = /^(1?\d):?([0-5]\d)?(am|pm)$/i;
   var ExactTimeOfDayMatcher = /^(1?\d):([0-5]\d)$/i;
+  var YearMatcher = /^(\d\d\d\d)$/i;
+  var RogueNumberMatcher = /^(\d?\d),?$/i;
 
   var matchers = [{
     regex: ExactTimeOfDayMatcher,
@@ -44,6 +46,12 @@
   }, {
     regex: DateInMonthMatcher,
     handler: matchDateInMonth
+  }, {
+    regex: RogueNumberMatcher,
+    handler: matchRogueNumber
+  }, {
+    regex: YearMatcher,
+    handler: matchYear
   }];
 
   const applyHours = (hours) => {
@@ -51,6 +59,22 @@
       setUTCHours: hours
     };
   };
+
+  function matchRogueNumber(token, tokens, context) {
+    var dateInMonth = Number.parseInt(token.match(RogueNumberMatcher)[1]);
+
+    return {
+      setUTCDate: dateInMonth
+    };
+  }
+
+  function matchYear(token, tokens, context) {
+    var year = Number.parseInt(token.match(YearMatcher)[1]);
+
+    return {
+      setUTCFullYear: year
+    };
+  }
 
   function matchExactTimeOfDay(token, tokens, context) {
     var time = token.match(ExactTimeOfDayMatcher);

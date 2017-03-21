@@ -92,6 +92,13 @@ describe('Interpret Date', () => {
     test('23rd August', 'Wed, 23 Aug 2017 08:00:00 GMT');
     test('4pm on the 25th March', 'Sat, 25 Mar 2017 16:00:00 GMT');
     test('March 25th at 2am', 'Sat, 25 Mar 2017 02:00:00 GMT');
+    test('Sat May 27, 2017', 'Sat, 27 May 2017 08:00:00 GMT')
+  });
+
+  describe('Year', () => {
+    test('May 27, 2018', 'Sun, 27 May 2018 08:00:00 GMT')
+    test('May 27, 2016', 'Fri, 27 May 2016 08:00:00 GMT')
+    test('January 2018', 'Mon, 01 Jan 2018 08:00:00 GMT')
   });
 
   describe('Time in day', () => {
