@@ -163,31 +163,12 @@
 
     <template for="tasklist-item">
       <p>
-        <span class="day-of-week">{{interpreted-day-of-week}}</span> {{#if local}}
-        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span> {{/if}}
-        <span class="glyphicon glyphicon-trash delete button" aria-hidden="true"></span>
+        <span class="day-of-week">{{interpreted-day-of-week}}</span>
         <b>{{days-until}}</b> : {{content}}, <i style="opacity: 0.4;">{{date-string}}</i>
         <span class="date">Interpretted: {{interpreted-date}}</span>
         <span class="date">Reference: {{reference-date}}</span>
       </p>
     </template>
-
-    <script for="tasklist" type="text/javascript">
-      $(function() {
-        TasklistItem = Component.configure('tasklist-item');
-
-        TasklistItem.on('renderComplete', function(instance) {
-          $(instance.element).find('span.delete.button').on('click', function() {
-            console.log('Delete instance', '"' + instance['date-string'] + '"', '"' + instance.content + '"');
-            deleteTask({
-              dateString: instance['date-string'],
-              entryDate: instance['entry-date'],
-              text: instance.content
-            });
-          });
-        });
-      });
-    </script>
 
     <style for="tasklist-item">
       .row>.col-md-6 {
