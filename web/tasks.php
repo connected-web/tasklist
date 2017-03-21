@@ -4,6 +4,7 @@ require('./php/FileCache.class.php');
 
 session_start();
 $auth = isset($_SESSION['mkv25_tasklist_auth']) ? $_SESSION['mkv25_tasklist_auth'] : false;
+$tasks = false;
 
 if($auth) {
   // read from cache
