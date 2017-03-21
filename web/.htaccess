@@ -5,6 +5,9 @@ RewriteEngine  on
 RewriteRule store store.php [NC]
 
 RewriteEngine  on
+RewriteRule delete delete.php [NC]
+
+RewriteEngine  on
 RewriteRule auth/status/json auth/status.php [NC]
 
 RewriteEngine  on

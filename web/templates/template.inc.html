@@ -226,6 +226,16 @@
           return item.text !== task.text;
         });
         writeLocalTasks(tasklist);
+        if (window.auth) {
+          $.post('./delete', {
+            entryDate: task.entryDate,
+            dateString: task.dateString,
+            text: task.text
+          }, renderTaskList);
+        }
+        else {
+          renderTaskList();
+        }
       }
 
       function displayTasklistData() {
@@ -330,8 +340,8 @@
     <template for="tasklist-item">
       <p>
         <span class="day-of-week">{{interpreted-day-of-week}}</span> {{#if local}}
-        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
-        <span class="glyphicon glyphicon-trash delete button" aria-hidden="true"></span> {{/if}}
+        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span> {{/if}}
+        <span class="glyphicon glyphicon-trash delete button" aria-hidden="true"></span>
         <b>{{days-until}}</b> : {{content}}, <i style="opacity: 0.4;">{{date-string}}</i>
         <span class="date">Interpretted: {{interpreted-date}}</span>
         <span class="date">Reference: {{reference-date}}</span>
