@@ -70,24 +70,20 @@
 
     <template for="auth">
       {{#if auth}}
-        <h1>Welcome {{displayName}}</h1>
-        <p>You are signed in using {{auth.provider}}, things are cool.</p>
+      <h1>Welcome {{displayName}}</h1>
+      <p>You are signed in using {{auth.provider}}, things are cool.</p>
       {{else}}
-        <h1>Sign in...</h1>
-        <p>Please sign in with one of the following providers:</p>
-      {{/if}}
-      {{#if providers}}
-        <div class="providers">
+      <h1>Sign in...</h1>
+      <p>Please sign in with one of the following providers:</p>
+      {{/if}} {{#if providers}}
+      <div class="providers">
         {{#each providers}}
-          <a href="{{url}}" class="logo {{id}}" title="{{label}}"><b class="hidden">{{label}}</b></a>
-        {{/each}}
-        </div>
-      {{/if}}
-
-      {{#if auth}}
-          <p>Task data will be saved on our servers based on your provider's user id, and accessible any time you re-authenticate.</p>
+        <a href="{{url}}" class="logo {{id}}" title="{{label}}"><b class="hidden">{{label}}</b></a> {{/each}}
+      </div>
+      {{/if}} {{#if auth}}
+      <p>Task data will be saved on our servers based on your provider's user id, and accessible any time you re-authenticate.</p>
       {{else}}
-          <p>Tasks will be saved using local cookies on your device.</p>
+      <p>Tasks will be saved using local cookies on your device.</p>
       {{/if}}
     </template>
 
@@ -106,6 +102,7 @@
 
         Auth.on('preRenderStep', function(instance) {
           instance.displayName = instance.auth ? findName(instance.auth) : false;
+          window.auth = instance.auth;
         });
       });
     </script>
@@ -114,6 +111,7 @@
       .hidden {
         display: none;
       }
+
       .providers {
         display: inline-block;
         border-radius: 12px;
@@ -122,18 +120,22 @@
         font-size: 0;
         margin: 0 0 12px 0;
       }
-      .providers > .logo {
+
+      .providers>.logo {
         border-radius: 6px;
         margin: 0 6px 0 0;
         opacity: 0.5;
       }
-      .providers > .logo:hover {
+
+      .providers>.logo:hover {
         opacity: 1.0;
       }
-      .providers > .logo:active {
+
+      .providers>.logo:active {
         opacity: 0.7;
       }
-      .providers > .logo:last-child {
+
+      .providers>.logo:last-child {
         margin: 0;
       }
     </style>
@@ -166,11 +168,12 @@
 
     <script for="shared" type="text/javascript">
       String.prototype.hashCode = function() {
-        var hash = 0, i, chr, len;
+        var hash = 0,
+          i, chr, len;
         if (this.length === 0) return hash;
         for (i = 0, len = this.length; i < len; i++) {
-          chr   = this.charCodeAt(i);
-          hash  = ((hash << 5) - hash) + chr;
+          chr = this.charCodeAt(i);
+          hash = ((hash << 5) - hash) + chr;
           hash |= 0; // Convert to 32bit integer
         }
         return hash;
@@ -184,7 +187,7 @@
         });
 
         result = [];
-        for(var key in hashMap) {
+        for (var key in hashMap) {
           result.push(hashMap[key]);
         }
         return result;
@@ -227,7 +230,7 @@
 
       function displayTasklistData() {
         var localData = readLocalTasks();
-        $.get('./tasks/json', function (data) {
+        $.get('./tasks/json', function(data) {
           var tasklist = {
             tasks: removeDuplicateTasks([].concat(data.tasks, localData.tasks)).sort(function(a, b) {
               return a.entryDate > b.entryDate
@@ -241,9 +244,17 @@
         var localTasks = readLocalTasks();
         localTasks.tasks = localTasks.tasks || [];
         if (task.dateString && task.text) {
-          localTasks.tasks.push(task);
-          writeLocalTasks(localTasks);
-          displayTasklistData();
+          if (window.auth) {
+            $.post('/tasks/store', {
+              entryDate: task.entryDate,
+              dateString: task.dateString,
+              text: task.text
+            }, renderTaskList);
+          } else {
+            localTasks.tasks.push(task);
+            writeLocalTasks(localTasks);
+            renderTaskList();
+          }
         }
       }
 
@@ -252,6 +263,7 @@
         Tasklist.apply(function(instance) {
           instance.render();
         });
+        displayTasklistData();
       }
 
       displayTasklistData();
@@ -279,7 +291,13 @@
               dateString: $date.val(),
               text: $description.val()
             });
-            $preview.html(`<tasklist-item class="${task.class}" date-string="${task.dateString}" entry-date="${task.entryDate}" days-until="${task.daysUntil.string}" reference-date="${task.referenceDate.string}" interpreted-date="${task.interpretedDate.string}" interpreted-day-of-week="${task.interpretedDate.dayOfWeek}" local="${task.local}">${task.text}</tasklist-item>`);
+            if (task.dateString || task.text) {
+              $preview.html(
+                `<tasklist-item class="${task.class}" date-string="${task.dateString}" entry-date="${task.entryDate}" days-until="${task.daysUntil.string}" reference-date="${task.referenceDate.string}" interpreted-date="${task.interpretedDate.string}" interpreted-day-of-week="${task.interpretedDate.dayOfWeek}" local="${task.local}">${task.text}</tasklist-item>`
+              );
+            } else {
+              $preview.html('');
+            }
             Component.scanForComponents(document.getElementById('new-event-preview'))
           }
 
@@ -294,17 +312,15 @@
           });
 
           $add.on('click', function(event) {
-            updateAddEntryPreview()
             var task = {
               entryDate: Date.now() / 1000,
               dateString: $date.val(),
               text: $description.val()
             };
             addNewEntry(task);
-            displayTasklistData();
             $description.val('');
             $date.val('');
-            renderTaskList();
+            updateAddEntryPreview();
           });
 
         });
@@ -313,11 +329,9 @@
 
     <template for="tasklist-item">
       <p>
-        <span class="day-of-week">{{interpreted-day-of-week}}</span>
-        {{#if local}}
+        <span class="day-of-week">{{interpreted-day-of-week}}</span> {{#if local}}
         <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
-        <span class="glyphicon glyphicon-trash delete button" aria-hidden="true"></span>
-        {{/if}}
+        <span class="glyphicon glyphicon-trash delete button" aria-hidden="true"></span> {{/if}}
         <b>{{days-until}}</b> : {{content}}, <i style="opacity: 0.4;">{{date-string}}</i>
         <span class="date">Interpretted: {{interpreted-date}}</span>
         <span class="date">Reference: {{reference-date}}</span>
@@ -343,7 +357,7 @@
     </script>
 
     <style for="tasklist-item">
-      .row > .col-md-6 {
+      .row>.col-md-6 {
         margin-bottom: 5px;
       }
 
@@ -382,7 +396,7 @@
 
       tasklist-item .day-of-week {
         border-radius: 3px;
-        background: rgba(255,255,255,0.4);
+        background: rgba(255, 255, 255, 0.4);
         padding: 4px;
         text-transform: uppercase;
         width: 32px;
@@ -402,7 +416,9 @@
         opacity: 0.4;
       }
 
-      tasklist-item.unit-second.past, tasklist-item.unit-minute.past, tasklist-item.unit-hour.past {
+      tasklist-item.unit-second.past,
+      tasklist-item.unit-minute.past,
+      tasklist-item.unit-hour.past {
         opacity: 0.6;
       }
 
@@ -426,7 +442,9 @@
         background: #AAA;
       }
 
-      tasklist-item.unit-minute p, tasklist-item.unit-second p, tasklist-item.unit-millisecond p {
+      tasklist-item.unit-minute p,
+      tasklist-item.unit-second p,
+      tasklist-item.unit-millisecond p {
         background: #F96;
       }
 
@@ -437,7 +455,8 @@
 
     <template for="tasklist">
       {{#each tasks}}
-      <tasklist-item class="{{class}}" date-string="{{dateString}}" entry-date="{{entryDate}}" days-until="{{daysUntil.string}}" reference-date="{{referenceDate.string}}" interpreted-date="{{interpretedDate.string}}" interpreted-day-of-week="{{interpretedDate.dayOfWeek}}" local="{{local}}">{{text}}</tasklist-item>
+      <tasklist-item class="{{class}}" date-string="{{dateString}}" entry-date="{{entryDate}}" days-until="{{daysUntil.string}}" reference-date="{{referenceDate.string}}" interpreted-date="{{interpretedDate.string}}" interpreted-day-of-week="{{interpretedDate.dayOfWeek}}"
+        local="{{local}}">{{text}}</tasklist-item>
       {{/each}}
     </template>
 
