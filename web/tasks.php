@@ -34,14 +34,7 @@ if(!$tasks) {
 $result = Array('tasks' => $tasks);
 
 // add session info
-if($auth) {
-  $result['tasks'][] = array(
-    'text' => 'Session storage available',
-    'dateString' => 'Today',
-    'entryDate' => time()
-  );
-}
-else {
+if(!$auth) {
   $result['tasks'][] = array(
     'text' => 'Session storage unavailable',
     'dateString' => 'Today',
