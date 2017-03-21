@@ -230,7 +230,7 @@
 
       function displayTasklistData() {
         var localData = readLocalTasks();
-        $.get('./tasks/json', function(data) {
+        $.get('./tasks/json?rawdata=true', function(data) {
           var tasklist = {
             tasks: removeDuplicateTasks([].concat(data.tasks, localData.tasks)).sort(function(a, b) {
               return a.entryDate > b.entryDate
@@ -261,7 +261,7 @@
       function renderTaskList() {
         var Tasklist = Component.configure('tasklist');
         Tasklist.apply(function(instance) {
-          instance.render();
+          instance.refresh();
         });
         displayTasklistData();
       }
