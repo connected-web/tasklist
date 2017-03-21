@@ -49,16 +49,20 @@
     <auth data-source-url="./auth/status/json"></auth>
 
     <h2>Add task</h1>
-    <tasklist-input></tasklist-input>
+    <tasklist-input auth="{{auth.provider}}-{{auth.uid}}"></tasklist-input>
 
     <h2>Tasks</h2>
     <tasklist data-source-url="./tasks/json"></tasklist>
 
-    <h2>Merged Data</h2>
-    <p>The following data is a merge of data stored locally to your device and that returned remotely:</p>
+    <h2>Data for Export</h2>
+    <p>The following data is what we store about you based on your authorised session and local cookies:</p>
     <div id="merged-data"></div>
 
-    <p>Current timestamp: {{NOW}}</p>
+    <h3>Timestamp</h3>
+    <p>
+      <b>Current timestamp:</b>
+      <span>{{NOW}}</span>
+    </p>
   </div>
 
 
@@ -78,6 +82,12 @@
           <a href="{{url}}" class="logo {{id}}" title="{{label}}"><b class="hidden">{{label}}</b></a>
         {{/each}}
         </div>
+      {{/if}}
+
+      {{#if auth}}
+          <p>Task data will be saved on our servers based on your provider's user id, and accessible any time you re-authenticate.</p>
+      {{else}}
+          <p>Tasks will be saved using local cookies on your device.</p>
       {{/if}}
     </template>
 
@@ -110,6 +120,7 @@
         background: #CCC;
         padding: 6px;
         font-size: 0;
+        margin: 0 0 12px 0;
       }
       .providers > .logo {
         border-radius: 6px;
