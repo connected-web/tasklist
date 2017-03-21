@@ -1,0 +1,519 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>Tasklist</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- All the web compoent neat stuff -->
+  <script src="./external/jquery.min.js"></script>
+  <script src="./external/handlebars.js"></script>
+  <script src="./external/web-component.js"></script>
+
+  <!-- All the boostrap theming -->
+  <link rel="stylesheet" href="./external/bootstrap.min.css">
+  <script src="./external/bootstrap.min.js"></script>
+
+  <!-- Markdown support -->
+  <script src="./external/marked.min.js"></script>
+
+  <!-- Social icons -->
+  <link rel="stylesheet" href="./css/social-icons.css">
+
+  <!-- Code highlighting support -->
+  <link rel="stylesheet" href="./external/github.min.css">
+  <script src="./external/highlight.min.js"></script>
+
+  <!-- Date and time formatting -->
+  <script src="./js/interpret-date.js"></script>
+  <script src="./js/time-until.js"></script>
+  <script src="./js/cookie.js"></script>
+
+  <!--[if lt IE 9]>
+    <script src="./external/html5shiv.min.js"></script>
+    <script src="./external/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body role="document">
+
+  {{NAVIGATION}}
+
+  <div class="jumbotron"></div>
+
+  <div class="container theme-showcase" role="main">
+
+    <auth data-source-url="./auth/status/json"></auth>
+
+    <h2>Add task</h1>
+    <tasklist-input></tasklist-input>
+
+    <h2>Tasks</h2>
+    <tasklist data-source-url="./tasks/json"></tasklist>
+
+    <h2>Data for Export</h2>
+    <p>The following data is what we store about you based on your authorised session and local cookies:</p>
+    <div id="merged-data"></div>
+
+    <h3>Timestamp</h3>
+    <p>
+      <b>Current timestamp:</b>
+      <span>{{NOW}}</span>
+    </p>
+
+    <h3>Questions that I asked myself</h3>
+    <h4>Can I edit items?</h4>
+    <p><b>No:</b> just add your new item, then remove the old one by hitting the trash icon on the right hand side.
+
+    <h4>Can I remove items?</h4>
+    <p><b>Yes:</b> hit the trash icon on the right hand side.</p>
+
+    <h4>How flexible is the date matcher?</h4>
+    <p><b>Pretty flexible;</b> try stuff out. If it doesn't match as expected, then add an example to the <a href="https://github.com/connected-web/tasklist/blob/master/test/js/interpret-date-test.js">test suite</a>.
+
+    <h4>Can I share my tasklist with other people?</h4>
+    <p><b>Not yet</b>, but soon. Its like the next feature I want to work on.</p>
+
+    <h4>Can you add more auth providers?</h4>
+    <p><b>Yes</b>, any strategy that <a href="http://opauth.org/#strategies">opauth supports</a> I can too, just requires some configuration.</p>
+  </div>
+
+  <div class="templates">
+
+    <template for="auth">
+      {{#if auth}}
+      <h1>Welcome {{displayName}}</h1>
+      <p>You are signed in using {{auth.provider}}, things are cool.</p>
+      <p>Share your tasks with someone else, link them to: <a href="/tasklist/?user={{auth.provider}}-{{auth.uid}}">https://mkv25.net/tasklist/#{{auth.provider}}-{{auth.uid}}</a></p>
+      {{else}}
+      <h1>Sign in...</h1>
+      <p>Please sign in with one of the following providers:</p>
+      {{/if}} {{#if providers}}
+      <div class="providers">
+        {{#each providers}}
+        <a href="{{url}}" class="logo {{id}}" title="{{label}}"><b class="hidden">{{label}}</b></a> {{/each}}
+      </div>
+      {{/if}} {{#if auth}}
+      <p>Task data will be saved on our servers based on your provider's user id, and accessible any time you re-authenticate.</p>
+      {{else}}
+      <p>Tasks will be saved using local cookies on your device.</p>
+      {{/if}}
+    </template>
+
+    <script for="auth" type="text/javascript">
+      $(function() {
+        Auth = Component.configure('auth');
+
+        function first(string) {
+          string = string || '';
+          return string.split(' ')[0];
+        }
+
+        function findName(start) {
+          return first(start && start.info && (start.info.first_name || start.info.name || start.info.nickname)) || '????';
+        }
+
+        Auth.on('preRenderStep', function(instance) {
+          instance.displayName = instance.auth ? findName(instance.auth) : false;
+          window.auth = instance.auth;
+        });
+      });
+    </script>
+
+    <style for="auth">
+      .hidden {
+        display: none;
+      }
+
+      .providers {
+        display: inline-block;
+        border-radius: 12px;
+        background: #CCC;
+        padding: 6px;
+        font-size: 0;
+        margin: 0 0 12px 0;
+      }
+
+      .providers>.logo {
+        border-radius: 6px;
+        margin: 0 6px 0 0;
+        opacity: 0.5;
+      }
+
+      .providers>.logo:hover {
+        opacity: 1.0;
+      }
+
+      .providers>.logo:active {
+        opacity: 0.7;
+      }
+
+      .providers>.logo:last-child {
+        margin: 0;
+      }
+    </style>
+
+    <template for="tasklist-input">
+      <form>
+        <div class="row">
+          <div class="col-md-6">
+            <label class="sr-only" for="new-event-description">Event</label>
+            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+              <div class="input-group-addon"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></div>
+              <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="new-event-description" placeholder="Event description">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="sr-only" for="new-event-date">Time or date</label>
+            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+              <div class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></div>
+              <input type="text" class="form-control" id="new-event-date" placeholder="Friday after lunch">
+              <span class="input-group-btn">
+                <button class="btn btn-success" type="button" id="new-event-add"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div id="new-event-preview"></div>
+    </template>
+
+    <script for="shared" type="text/javascript">
+      String.prototype.hashCode = function() {
+        var hash = 0,
+          i, chr, len;
+        if (this.length === 0) return hash;
+        for (i = 0, len = this.length; i < len; i++) {
+          chr = this.charCodeAt(i);
+          hash = ((hash << 5) - hash) + chr;
+          hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
+      };
+
+      function removeDuplicateTasks(tasks) {
+        var hashMap = {};
+        tasks.forEach(function(item) {
+          var hash = (item.text + item.dateString).hashCode();
+          hashMap[hash] = item;
+        });
+
+        result = [];
+        for (var key in hashMap) {
+          result.push(hashMap[key]);
+        }
+        return result;
+      }
+
+      function enhanceTask(task) {
+        task.referenceDate = new Date(task.entryDate * 1000);
+        task.interpretedDate = interpretDate(task.referenceDate, task.dateString);
+        task.daysUntil = timeUntil(task.interpretedDate);
+        task.unit = task.daysUntil.unit;
+        task.past = task.daysUntil.past ? 'past' : 'future';
+        task.class = ('unit-' + task.unit + ' ' + task.past).trim();
+        task.interpretedDate.string = task.interpretedDate.toUTCString();
+        task.referenceDate.string = task.referenceDate.toUTCString();
+        task.interpretedDate.dayOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][task.interpretedDate.getDay()];
+
+        return task;
+      }
+
+      function readLocalTasks() {
+        var tasklist = Cookies.read().tasklist || {};
+        tasklist.tasks = tasklist.tasks || [];
+        return tasklist;
+      }
+
+      function writeLocalTasks(tasklist) {
+        tasklist.tasks = removeDuplicateTasks(tasklist.tasks);
+        Cookies.write({
+          tasklist: tasklist
+        }, 100, '/tasklist');
+      }
+
+      function deleteTask(task) {
+        var tasklist = readLocalTasks();
+        tasklist.tasks = tasklist.tasks.filter(function(item) {
+          return item.text !== task.text;
+        });
+        writeLocalTasks(tasklist);
+        if (window.auth) {
+          $.post('./delete', {
+            entryDate: task.entryDate,
+            dateString: task.dateString,
+            text: task.text
+          }, renderTaskList);
+        }
+        else {
+          renderTaskList();
+        }
+      }
+
+      function displayTasklistData() {
+        var localData = readLocalTasks();
+        $.get('./tasks/json?rawdata=true', function(data) {
+          var tasklist = {
+            tasks: removeDuplicateTasks([].concat(data.tasks, localData.tasks)).sort(function(a, b) {
+              return a.entryDate > b.entryDate
+            })
+          };
+          $('#merged-data').html('<pre>' + JSON.stringify(tasklist, null, 2) + '</pre>');
+        });
+      }
+
+      function addNewEntry(task) {
+        var localTasks = readLocalTasks();
+        localTasks.tasks = localTasks.tasks || [];
+        if (task.dateString && task.text) {
+          if (window.auth) {
+            $.post('./store', {
+              entryDate: task.entryDate,
+              dateString: task.dateString,
+              text: task.text
+            }, renderTaskList);
+          } else {
+            localTasks.tasks.push(task);
+            writeLocalTasks(localTasks);
+            renderTaskList();
+          }
+        }
+      }
+
+      function renderTaskList() {
+        var Tasklist = Component.configure('tasklist');
+        Tasklist.apply(function(instance) {
+          instance.refresh();
+        });
+        displayTasklistData();
+      }
+
+      displayTasklistData();
+    </script>
+
+    <script for="tasklist-input" type="text/javascript">
+      $(function() {
+        TasklistInput = Component.configure('tasklist-input');
+
+        TasklistInput.on('preRenderStep', function(instance) {
+
+        });
+
+        TasklistInput.apply(function(instance) {
+          instance.render();
+
+          $description = $('#new-event-description');
+          $date = $('#new-event-date');
+          $add = $('#new-event-add');
+          $preview = $('#new-event-preview');
+
+          function updateAddEntryPreview() {
+            var task = enhanceTask({
+              entryDate: Date.now() / 1000,
+              dateString: $date.val(),
+              text: $description.val()
+            });
+            if (task.dateString || task.text) {
+              $preview.html(
+                `<tasklist-item class="${task.class}" date-string="${task.dateString}" entry-date="${task.entryDate}" days-until="${task.daysUntil.string}" reference-date="${task.referenceDate.string}" interpreted-date="${task.interpretedDate.string}" interpreted-day-of-week="${task.interpretedDate.dayOfWeek}" local="${task.local}">${task.text}</tasklist-item>`
+              );
+            } else {
+              $preview.html('');
+            }
+            Component.scanForComponents(document.getElementById('new-event-preview'))
+          }
+
+          $description.on('change', function(event) {
+            console.log('Description:', event.target.value)
+            updateAddEntryPreview()
+          });
+
+          $date.on('change', function(event) {
+            console.log('Date:', event.target.value)
+            updateAddEntryPreview()
+          });
+
+          $add.on('click', function(event) {
+            var task = {
+              entryDate: Date.now() / 1000,
+              dateString: $date.val(),
+              text: $description.val()
+            };
+            addNewEntry(task);
+            $description.val('');
+            $date.val('');
+            updateAddEntryPreview();
+          });
+
+        });
+      });
+    </script>
+
+    <template for="tasklist-item">
+      <p>
+        <span class="day-of-week">{{interpreted-day-of-week}}</span> {{#if local}}
+        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span> {{/if}}
+        <span class="glyphicon glyphicon-trash delete button" aria-hidden="true"></span>
+        <b>{{days-until}}</b> : {{content}}, <i style="opacity: 0.4;">{{date-string}}</i>
+        <span class="date">Interpretted: {{interpreted-date}}</span>
+        <span class="date">Reference: {{reference-date}}</span>
+      </p>
+    </template>
+
+    <script for="tasklist" type="text/javascript">
+      $(function() {
+        TasklistItem = Component.configure('tasklist-item');
+
+        TasklistItem.on('renderComplete', function(instance) {
+          $(instance.element).find('span.delete.button').on('click', function() {
+            console.log('Delete instance', '"' + instance['date-string'] + '"', '"' + instance.content + '"');
+            deleteTask({
+              dateString: instance['date-string'],
+              entryDate: instance['entry-date'],
+              text: instance.content
+            });
+          });
+        });
+      });
+    </script>
+
+    <style for="tasklist-item">
+      .row>.col-md-6 {
+        margin-bottom: 5px;
+      }
+
+      tasklist-item {
+        display: block;
+        padding: 5px 0;
+      }
+
+      tasklist-item>p>span.date {
+        display: none;
+      }
+
+      tasklist-item>p>span.delete {
+        opacity: 0.1;
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        padding: 5px;
+      }
+
+      tasklist-item>p>span.delete:hover {
+        opacity: 1.0;
+      }
+
+      tasklist-item>p>span.delete:active {
+        color: white;
+      }
+
+      tasklist-item>p {
+        padding: 4px 4px;
+        border-radius: 5px;
+        background: #999;
+        margin: 0;
+        position: relative;
+      }
+
+      tasklist-item .day-of-week {
+        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.4);
+        padding: 4px;
+        text-transform: uppercase;
+        width: 32px;
+        font-size: 10px;
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+        margin-right: 8px;
+      }
+
+      tasklist-item .glyphicon {
+        font-size: 110%;
+        vertical-align: text-top;
+      }
+
+      tasklist-item.past {
+        opacity: 0.4;
+      }
+
+      tasklist-item.unit-second.past,
+      tasklist-item.unit-minute.past,
+      tasklist-item.unit-hour.past {
+        opacity: 0.6;
+      }
+
+      tasklist-item.unit-day p {
+        background: #AAF;
+      }
+
+      tasklist-item.unit-week p {
+        background: #FE9;
+      }
+
+      tasklist-item.unit-month p {
+        background: #AE8;
+      }
+
+      tasklist-item.unit-year p {
+        background: #CFC;
+      }
+
+      tasklist-item.past p {
+        background: #AAA;
+      }
+
+      tasklist-item.unit-minute p,
+      tasklist-item.unit-second p,
+      tasklist-item.unit-millisecond p {
+        background: #F96;
+      }
+
+      tasklist-item.unit-hour p {
+        background: #FA6;
+      }
+    </style>
+
+    <template for="tasklist">
+      {{#each tasks}}
+      <tasklist-item class="{{class}}" date-string="{{dateString}}" entry-date="{{entryDate}}" days-until="{{daysUntil.string}}" reference-date="{{referenceDate.string}}" interpreted-date="{{interpretedDate.string}}" interpreted-day-of-week="{{interpretedDate.dayOfWeek}}"
+        local="{{local}}">{{text}}</tasklist-item>
+      {{/each}}
+    </template>
+
+    <script for="tasklist" type="text/javascript">
+      $(function() {
+        var Tasklist = Component.configure('tasklist');
+
+        Tasklist.on('preRenderStep', function(instance) {
+
+          instance.tasks = (instance.tasks || []).filter(function(task) {
+            return !task.local;
+          });
+          var localTasks = readLocalTasks().tasks.forEach(function(task) {
+            task.local = true;
+            instance.tasks.push(task);
+          });
+          instance.tasks.forEach(enhanceTask);
+
+          instance.tasks = removeDuplicateTasks(instance.tasks);
+
+          instance.tasks = instance.tasks.sort(function(a, b) {
+            return a.interpretedDate.getTime() - b.interpretedDate.getTime();
+          });
+
+        });
+
+        Tasklist.apply(function(instance) {
+          instance.render();
+        });
+      });
+    </script>
+  </div>
+</body>
+
+</html>

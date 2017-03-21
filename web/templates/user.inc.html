@@ -46,140 +46,13 @@
 
   <div class="container theme-showcase" role="main">
 
-    <auth data-source-url="./auth/status/json"></auth>
+    <h2>Shared Tasks</h2>
+    <p>These tasks have been shared with you.</p>
 
-    <h2>Add task</h1>
-    <tasklist-input auth="{{auth.provider}}-{{auth.uid}}"></tasklist-input>
-
-    <h2>Tasks</h2>
-    <tasklist data-source-url="./tasks/json"></tasklist>
-
-    <h2>Data for Export</h2>
-    <p>The following data is what we store about you based on your authorised session and local cookies:</p>
-    <div id="merged-data"></div>
-
-    <h3>Timestamp</h3>
-    <p>
-      <b>Current timestamp:</b>
-      <span>{{NOW}}</span>
-    </p>
-
-    <h3>Questions that I asked myself</h3>
-    <h4>Can I edit items?</h4>
-    <p><b>No:</b> just add your new item, then remove the old one by hitting the trash icon on the right hand side.
-
-    <h4>Can I remove items?</h4>
-    <p><b>Yes:</b> hit the trash icon on the right hand side.</p>
-
-    <h4>How flexible is the date matcher?</h4>
-    <p><b>Pretty flexible;</b> try stuff out. If it doesn't match as expected, then add an example to the <a href="https://github.com/connected-web/tasklist/blob/master/test/js/interpret-date-test.js">test suite</a>.
-
-    <h4>Can I share my tasklist with other people?</h4>
-    <p><b>Not yet</b>, but soon. Its like the next feature I want to work on.</p>
-
-    <h4>Can you add more auth providers?</h4>
-    <p><b>Yes</b>, any strategy that <a href="http://opauth.org/#strategies">opauth supports</a> I can too, just requires some configuration.</p>
+    <tasklist data-source-url="./tasks/json?user={{USER_REF}}"></tasklist>
   </div>
 
   <div class="templates">
-
-    <template for="auth">
-      {{#if auth}}
-      <h1>Welcome {{displayName}}</h1>
-      <p>You are signed in using {{auth.provider}}, things are cool.</p>
-      {{else}}
-      <h1>Sign in...</h1>
-      <p>Please sign in with one of the following providers:</p>
-      {{/if}} {{#if providers}}
-      <div class="providers">
-        {{#each providers}}
-        <a href="{{url}}" class="logo {{id}}" title="{{label}}"><b class="hidden">{{label}}</b></a> {{/each}}
-      </div>
-      {{/if}} {{#if auth}}
-      <p>Task data will be saved on our servers based on your provider's user id, and accessible any time you re-authenticate.</p>
-      {{else}}
-      <p>Tasks will be saved using local cookies on your device.</p>
-      {{/if}}
-    </template>
-
-    <script for="auth" type="text/javascript">
-      $(function() {
-        Auth = Component.configure('auth');
-
-        function first(string) {
-          string = string || '';
-          return string.split(' ')[0];
-        }
-
-        function findName(start) {
-          return first(start && start.info && (start.info.first_name || start.info.name || start.info.nickname)) || '????';
-        }
-
-        Auth.on('preRenderStep', function(instance) {
-          instance.displayName = instance.auth ? findName(instance.auth) : false;
-          window.auth = instance.auth;
-        });
-      });
-    </script>
-
-    <style for="auth">
-      .hidden {
-        display: none;
-      }
-
-      .providers {
-        display: inline-block;
-        border-radius: 12px;
-        background: #CCC;
-        padding: 6px;
-        font-size: 0;
-        margin: 0 0 12px 0;
-      }
-
-      .providers>.logo {
-        border-radius: 6px;
-        margin: 0 6px 0 0;
-        opacity: 0.5;
-      }
-
-      .providers>.logo:hover {
-        opacity: 1.0;
-      }
-
-      .providers>.logo:active {
-        opacity: 0.7;
-      }
-
-      .providers>.logo:last-child {
-        margin: 0;
-      }
-    </style>
-
-    <template for="tasklist-input">
-      <form>
-        <div class="row">
-          <div class="col-md-6">
-            <label class="sr-only" for="new-event-description">Event</label>
-            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-              <div class="input-group-addon"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></div>
-              <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="new-event-description" placeholder="Event description">
-            </div>
-          </div>
-          <div class="col-md-6">
-            <label class="sr-only" for="new-event-date">Time or date</label>
-            <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-              <div class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></div>
-              <input type="text" class="form-control" id="new-event-date" placeholder="Friday after lunch">
-              <span class="input-group-btn">
-                <button class="btn btn-success" type="button" id="new-event-add"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add</button>
-              </span>
-            </div>
-          </div>
-        </div>
-      </form>
-
-      <div id="new-event-preview"></div>
-    </template>
 
     <script for="shared" type="text/javascript">
       String.prototype.hashCode = function() {
@@ -222,76 +95,12 @@
         return task;
       }
 
-      function readLocalTasks() {
-        var tasklist = Cookies.read().tasklist || {};
-        tasklist.tasks = tasklist.tasks || [];
-        return tasklist;
-      }
-
-      function writeLocalTasks(tasklist) {
-        tasklist.tasks = removeDuplicateTasks(tasklist.tasks);
-        Cookies.write({
-          tasklist: tasklist
-        }, 100, '/tasklist');
-      }
-
-      function deleteTask(task) {
-        var tasklist = readLocalTasks();
-        tasklist.tasks = tasklist.tasks.filter(function(item) {
-          return item.text !== task.text;
-        });
-        writeLocalTasks(tasklist);
-        if (window.auth) {
-          $.post('./delete', {
-            entryDate: task.entryDate,
-            dateString: task.dateString,
-            text: task.text
-          }, renderTaskList);
-        }
-        else {
-          renderTaskList();
-        }
-      }
-
-      function displayTasklistData() {
-        var localData = readLocalTasks();
-        $.get('./tasks/json?rawdata=true', function(data) {
-          var tasklist = {
-            tasks: removeDuplicateTasks([].concat(data.tasks, localData.tasks)).sort(function(a, b) {
-              return a.entryDate > b.entryDate
-            })
-          };
-          $('#merged-data').html('<pre>' + JSON.stringify(tasklist, null, 2) + '</pre>');
-        });
-      }
-
-      function addNewEntry(task) {
-        var localTasks = readLocalTasks();
-        localTasks.tasks = localTasks.tasks || [];
-        if (task.dateString && task.text) {
-          if (window.auth) {
-            $.post('./store', {
-              entryDate: task.entryDate,
-              dateString: task.dateString,
-              text: task.text
-            }, renderTaskList);
-          } else {
-            localTasks.tasks.push(task);
-            writeLocalTasks(localTasks);
-            renderTaskList();
-          }
-        }
-      }
-
       function renderTaskList() {
         var Tasklist = Component.configure('tasklist');
         Tasklist.apply(function(instance) {
           instance.refresh();
         });
-        displayTasklistData();
       }
-
-      displayTasklistData();
     </script>
 
     <script for="tasklist-input" type="text/javascript">
@@ -489,14 +298,7 @@
         var Tasklist = Component.configure('tasklist');
 
         Tasklist.on('preRenderStep', function(instance) {
-
-          instance.tasks = (instance.tasks || []).filter(function(task) {
-            return !task.local;
-          });
-          var localTasks = readLocalTasks().tasks.forEach(function(task) {
-            task.local = true;
-            instance.tasks.push(task);
-          });
+          instance.tasks = (instance.tasks || []);
           instance.tasks.forEach(enhanceTask);
 
           instance.tasks = removeDuplicateTasks(instance.tasks);

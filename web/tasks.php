@@ -6,27 +6,31 @@ session_start();
 $auth = isset($_SESSION['mkv25_tasklist_auth']) ? $_SESSION['mkv25_tasklist_auth'] : false;
 $tasks = false;
 
-if($auth) {
-  // read from cache
+if(isset($_GET['user'])) {
+  // read from supplied cache
+  $tasksCacheId = 'tasks-' . $_GET['user'];
+  $tasks = FileCache::readDataFromCache($tasksCacheId);
+}
+else if($auth) {
+  // read from authed cache
   $tasksCacheId = 'tasks-' . $auth['provider'] . '-' . $auth['uid'];
   $tasks = FileCache::readDataFromCache($tasksCacheId);
-
-  // minimum response
-  if(!$tasks) {
-    $tasks = array(
-      array(
-        'text' => 'No tasks entered',
-        'dateString' => 'Today',
-        'entryDate' => time()
-      )
-    );
-  }
 }
-
 else {
   $tasks = array(
     array(
       'text' => 'Session storage unavailable',
+      'dateString' => 'Today',
+      'entryDate' => time()
+    )
+  );
+}
+
+// minimum response
+if(!$tasks) {
+  $tasks = array(
+    array(
+      'text' => 'No tasks found',
       'dateString' => 'Today',
       'entryDate' => time()
     )

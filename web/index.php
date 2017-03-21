@@ -7,10 +7,17 @@ if($_SERVER['HTTP_HOST'] !== 'localhost' && (empty($_SERVER['HTTPS']) || $_SERVE
   exit();
 }
 
-$template = @file_get_contents('./templates/template.inc.html');
+if(isset($_GET['user'])) {
+  $body = @file_get_contents('./templates/user.inc.html');
+  $body = str_replace('{{USER_REF}}', $_GET['user'], $body);
+}
+else {
+  $body = @file_get_contents('./templates/main.inc.html');
+}
 $navigation = @file_get_contents('./templates/navigation.inc.html');
 
-$output = str_replace('{{NAVIGATION}}', $navigation, $template);
+$output = $body;
+$output = str_replace('{{NAVIGATION}}', $navigation, $output);
 $output = str_replace('{{NOW}}', time(), $output);
 
 echo $output;

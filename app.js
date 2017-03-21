@@ -12,7 +12,7 @@ app.get('/tasklist/', function (req, res) {
     return res.redirect(301, '/tasklist/')
   }
 
-  const template = fs.readFileSync('./web/templates/template.inc.html', utf8)
+  const template = fs.readFileSync('./web/templates/main.inc.html', utf8)
   const navigation = fs.readFileSync('./web/templates/navigation.inc.html', utf8)
 
   var output = template.replace('{{NAVIGATION}}', navigation)
