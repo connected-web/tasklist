@@ -26,7 +26,7 @@ if($auth) {
     $updatedTasks = array();
     $success = false;
     foreach($tasks as $index => $task) {
-      if(round($task['entryDate'], 2) === round($entryDate, 2) && $task['dateString'] === $dateString && $task['text'] === $text) {
+      if(round($task['entryDate'], 2) == round($entryDate, 2) && $task['dateString'] == $dateString && $task['text'] == $text) {
         // remove this task
         $success = true;
       }
