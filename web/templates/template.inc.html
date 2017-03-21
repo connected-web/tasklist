@@ -245,7 +245,7 @@
         localTasks.tasks = localTasks.tasks || [];
         if (task.dateString && task.text) {
           if (window.auth) {
-            $.post('/tasks/store', {
+            $.post('./store', {
               entryDate: task.entryDate,
               dateString: task.dateString,
               text: task.text
