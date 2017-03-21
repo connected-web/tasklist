@@ -87,7 +87,7 @@
       {{#if auth}}
       <h1>Welcome {{displayName}}</h1>
       <p>You are signed in using {{auth.provider}}, things are cool.</p>
-      <p>Share your tasks with someone else, link them to: <a href="/tasklist/?user={{auth.provider}}-{{auth.uid}}">https://mkv25.net/tasklist/#{{auth.provider}}-{{auth.uid}}</a></p>
+      <p>Share your tasks with someone else, link them to: <code><a href="/tasklist/?user={{auth.provider}}-{{auth.uid}}">https://mkv25.net/tasklist/?user={{auth.provider}}-{{auth.uid}}</a></code></p>
       {{else}}
       <h1>Sign in...</h1>
       <p>Please sign in with one of the following providers:</p>
