@@ -19,7 +19,7 @@ else if($auth) {
 else {
   $tasks = array(
     array(
-      'text' => 'No tasks stored remotely'
+      'text' => 'No tasks stored remotely',
       'dateString' => 'Today',
       'entryDate' => time()
     )
