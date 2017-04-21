@@ -19,7 +19,7 @@ else if($auth) {
 else {
   $tasks = array(
     array(
-      'text' => 'Session storage unavailable',
+      'text' => 'No tasks stored remotely'
       'dateString' => 'Today',
       'entryDate' => time()
     )

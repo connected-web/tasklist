@@ -22,12 +22,21 @@ app.get('/tasklist/', function (req, res) {
 
 app.use('/tasklist', express.static(path.join(__dirname, 'web')))
 
-const tasklist = {
-  tasks: require(path.join(__dirname, 'state', 'tasklist.json'))
-}
-
 app.get('/tasklist/tasks/json', function (req, res) {
-  res.json(tasklist)
+  let tasks = [];
+  if(stubAuth) {
+    tasks = fs.readFileSync(path.join(__dirname, 'state', 'tasklist.json'), utf8)
+  }
+  else {
+    tasks = [{
+      text: 'No tasks stored remotely',
+      dateString: 'Today',
+      entryDate: Date.now() / 1000
+    }]
+  }
+  res.json({
+    tasks
+  })
 })
 
 function provider(label, id) {
