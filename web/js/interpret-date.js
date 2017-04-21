@@ -41,6 +41,15 @@
     regex: /^morn?i?n?g?$/i,
     handler: matchMorning
   }, {
+    regex: /^afterno?o?n?$/i,
+    handler: matchAfternoon
+  }, {
+    regex: /^noon?$/i,
+    handler: matchMidday
+  }, {
+    regex: /^midda?y?$/i,
+    handler: matchMidday
+  }, {
     regex: /^tomor[row]*$/i,
     handler: matchTomorrow
   }, {
@@ -151,6 +160,18 @@
   function matchMorning(token, tokens, context) {
     return {
       setUTCHours: 8
+    };
+  }
+
+  function matchAfternoon(token, tokens, context) {
+    return {
+      setUTCHours: 13
+    };
+  }
+
+  function matchMidday(token, tokens, context) {
+    return {
+      setUTCHours: 12
     };
   }
 

@@ -42,6 +42,11 @@ describe('Interpret Date', () => {
     test('morning', 'Sun, 12 Feb 2017 08:00:00 GMT');
     test('Monday morn', 'Mon, 13 Feb 2017 08:00:00 GMT');
     test('Friday mornin', 'Fri, 17 Feb 2017 08:00:00 GMT');
+
+    test('afternoon', 'Sun, 12 Feb 2017 13:00:00 GMT');
+    test('Monday afternoon', 'Mon, 13 Feb 2017 13:00:00 GMT');
+    test('Friday noon', 'Fri, 17 Feb 2017 12:00:00 GMT');
+    test('Friday midday', 'Fri, 17 Feb 2017 12:00:00 GMT');
   });
 
   describe('Month of year strings', () => {
