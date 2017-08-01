@@ -10,11 +10,12 @@ const week = day * 7;
 
 interpretDate.debug = false;
 
-function test(input, expected, description) {
-  it(description || `should match '${input}' as ${expected}`, () => {
-    const actual = interpretDate(fixedTime, input).toUTCString();
-    assert.deepEqual(actual, expected);
-  });
+function test(input, expected, referenceTime) {
+  referenceTime = referenceTime || fixedTime
+  it(`should match '${input}' as ${expected}`, () => {
+    const actual = interpretDate(referenceTime, input).toUTCString()
+    assert.deepEqual(actual, expected)
+  })
 }
 
 describe('Interpret Date', () => {
@@ -24,7 +25,7 @@ describe('Interpret Date', () => {
   });
 
   describe('Day of Week Matchers', () => {
-    test('Next sunday', 'Sun, 19 Feb 2017 08:00:00 GMT', 'should match the next Sunday from a Sunday');
+    test('Next sunday', 'Sun, 19 Feb 2017 08:00:00 GMT');
     test('on Monday', 'Mon, 13 Feb 2017 08:00:00 GMT');
     test('Tues', 'Tue, 14 Feb 2017 08:00:00 GMT');
     test('wednesday', 'Wed, 15 Feb 2017 08:00:00 GMT');
@@ -59,6 +60,8 @@ describe('Interpret Date', () => {
     test('July mornin', 'Sat, 01 Jul 2017 08:00:00 GMT');
     test('August mornin', 'Tue, 01 Aug 2017 08:00:00 GMT');
     test('Sept eve', 'Fri, 01 Sep 2017 18:00:00 GMT');
+    test('September 15th eve', 'Fri, 15 Sep 2017 18:00:00 GMT');
+    test('September 15th eve', 'Fri, 15 Sep 2017 18:00:00 GMT', new Date(1501575669788));
     test('October mornin', 'Sun, 01 Oct 2017 08:00:00 GMT');
     test('November mornin', 'Wed, 01 Nov 2017 08:00:00 GMT');
     test('December eve', 'Fri, 01 Dec 2017 18:00:00 GMT');

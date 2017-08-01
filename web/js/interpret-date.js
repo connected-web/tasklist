@@ -196,9 +196,12 @@
       throw 'Unrecognised month of the year: ' + monthOffset;
     }
 
-    monthOffset = (monthOffset - context.getMonth() + 12) % 12 || 0;
     var now = context.getTime();
-    var future = new Date(now + (monthOffset * MONTH));
+    var future = new Date(now);
+    future.setUTCMonth(monthOffset);
+    if (context.getMonth() > monthOffset) {
+      future.setUTCFullYear(context.getUTCFullYear() + 1)
+    }
 
     return {
       setUTCFullYear: future.getUTCFullYear(),
