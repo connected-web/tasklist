@@ -230,6 +230,10 @@
         opacity: 0.4;
       }
 
+      tasklist.hide-old-items tasklist-item.past {
+        display: none;
+      }
+
       tasklist-item.unit-second.past,
       tasklist-item.unit-minute.past,
       tasklist-item.unit-hour.past {
@@ -268,6 +272,8 @@
     </style>
 
     <template for="tasklist">
+      <button class="btn btn-info hide-old-items disabled" type="button" name="show-old-items">Hide Old Items</button>
+      <button class="btn btn-info show-old-items" type="button" name="show-old-items">Show Old Items</button>
       {{#each tasks}}
       <tasklist-item class="{{class}}" date-string="{{dateString}}" entry-date="{{entryDate}}" days-until="{{daysUntil.string}}" reference-date="{{referenceDate.string}}" interpreted-date="{{interpretedDate.string}}" interpreted-day-of-week="{{interpretedDate.dayOfWeek}}"
         local="{{local}}">{{text}}</tasklist-item>
@@ -289,6 +295,38 @@
           });
 
         });
+
+        function updateVisibilityOfOldItems(instance) {
+          if(Tasklist.hideOldItems) {
+            $(instance.element).addClass('hide-old-items');
+          }
+          else {
+            $(instance.element).removeClass('hide-old-items');
+          }
+        }
+
+        Tasklist.on('renderComplete', function(instance) {
+          $hideButton = $(instance.element).find('button.hide-old-items');
+          $showButton = $(instance.element).find('button.show-old-items');
+
+          updateVisibilityOfOldItems(instance);
+
+          $hideButton.on('click', function() {
+            Tasklist.hideOldItems = true;
+            $hideButton.addClass('disabled');
+            $showButton.removeClass('disabled');
+            updateVisibilityOfOldItems(instance);
+          })
+
+          $showButton.on('click', function() {
+            Tasklist.hideOldItems = false;
+            $showButton.addClass('disabled');
+            $hideButton.removeClass('disabled');
+            updateVisibilityOfOldItems(instance);
+          })
+
+          console.log($hideButton, $showButton)
+        })
 
         Tasklist.apply(function(instance) {
           instance.render();

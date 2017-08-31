@@ -195,7 +195,7 @@
       function removeDuplicateTasks(tasks) {
         var hashMap = {};
         tasks.forEach(function(item) {
-          var hash = (item.text + item.dateString).hashCode();
+          var hash = (item.text + item.dateString + '').hashCode();
           hashMap[hash] = item;
         });
 
