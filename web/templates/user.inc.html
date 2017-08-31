@@ -283,6 +283,7 @@
     <script for="tasklist" type="text/javascript">
       $(function() {
         var Tasklist = Component.configure('tasklist');
+        Tasklist.hideOldItems = true;
 
         Tasklist.on('preRenderStep', function(instance) {
           instance.tasks = (instance.tasks || []);
