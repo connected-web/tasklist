@@ -10,7 +10,7 @@ function check($key) {
 }
 
 function sanitize($string) {
-  return html_entity_decode($string)
+  return html_entity_decode($string);
 }
 
 if($auth) {
