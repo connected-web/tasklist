@@ -9,6 +9,10 @@ function check($key) {
   return isset($_POST[$key]);
 }
 
+function sanitize($string) {
+  return html_entity_decode($string)
+}
+
 if($auth) {
   if(check('entryDate') && check('dateString') && check('text')) {
     // read from cache
@@ -20,8 +24,8 @@ if($auth) {
 
     // read from POST
     $entryDate = floatval($_POST['entryDate']);
-    $dateString = $_POST['dateString'];
-    $text = $_POST['text'];
+    $dateString = sanitize($_POST['dateString']);
+    $text = sanitize($_POST['text']);
 
     // add new task
     $tasks[] = array(
