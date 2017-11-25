@@ -81,6 +81,12 @@
         return result;
       }
 
+      function zp(num) {
+        if(num > 10)
+          return num + '';
+        return '0' + num;
+      }
+
       function enhanceTask(task) {
         task.referenceDate = new Date(task.entryDate * 1000);
         task.interpretedDate = interpretDate(task.referenceDate, task.dateString);
@@ -91,6 +97,7 @@
         task.interpretedDate.string = task.interpretedDate.toUTCString();
         task.referenceDate.string = task.referenceDate.toUTCString();
         task.interpretedDate.dayOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][task.interpretedDate.getDay()];
+        task.interpretedDate.timeOfDay = zp(task.interpretedDate.getHours()) + ':' + zp(task.interpretedDate.getMinutes())
 
         return task;
       }
@@ -127,7 +134,7 @@
             });
             if (task.dateString || task.text) {
               $preview.html(
-                `<tasklist-item class="${task.class}" date-string="${task.dateString}" entry-date="${task.entryDate}" days-until="${task.daysUntil.string}" reference-date="${task.referenceDate.string}" interpreted-date="${task.interpretedDate.string}" interpreted-day-of-week="${task.interpretedDate.dayOfWeek}" local="${task.local}">${task.text}</tasklist-item>`
+                `<tasklist-item class="${task.class}" date-string="${task.dateString}" entry-date="${task.entryDate}" days-until="${task.daysUntil.string}" reference-date="${task.referenceDate.string}" interpreted-date="${task.interpretedDate.string}" interpreted-day-of-week="${task.interpretedDate.dayOfWeek}" interpreted-time-of-day="${task.interpretedDate.timeOfDay}" local="${task.local}">${task.text}</tasklist-item>`
               );
             } else {
               $preview.html('');
@@ -162,11 +169,15 @@
     </script>
 
     <template for="tasklist-item">
-      <p>
+      <p title="{{interpreted-date}}">
         <span class="day-of-week">{{interpreted-day-of-week}}</span>
+        <span class="time-of-day">{{interpreted-time-of-day}}</span> {{#if local}}
+        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span> {{/if}}
+        <span class="glyphicon glyphicon-trash delete button" aria-hidden="true"></span>
         <b>{{days-until}}</b> : {{content}}, <i style="opacity: 0.4;">{{date-string}}</i>
-        <span class="date">Interpretted: {{interpreted-date}}</span>
-        <span class="date">Reference: {{reference-date}}</span>
+        <span class="date">{{interpreted-date}}</span>
+        <span class="hidden">Interpretted: {{interpreted-date}}</span>
+        <span class="hidden">Reference: {{reference-date}}</span>
       </p>
     </template>
 
@@ -180,8 +191,16 @@
         padding: 5px 0;
       }
 
+      tasklist-item>p>span.hidden {
+        display: none;
+      }
+
       tasklist-item>p>span.date {
         display: none;
+      }
+
+      tasklist-item>p>span.date.visible {
+        display: inline-block;
       }
 
       tasklist-item>p>span.delete {
@@ -208,7 +227,7 @@
         position: relative;
       }
 
-      tasklist-item .day-of-week {
+      tasklist-item .day-of-week, tasklist-item .time-of-day {
         border-radius: 3px;
         background: rgba(255, 255, 255, 0.4);
         padding: 4px;
@@ -218,7 +237,11 @@
         display: inline-block;
         vertical-align: middle;
         text-align: center;
-        margin-right: 8px;
+        margin-right: 0px;
+      }
+
+      tasklist-item .time-of-day {
+        margin-right: 4px;
       }
 
       tasklist-item .glyphicon {
@@ -275,7 +298,14 @@
       <button class="btn btn-info hide-old-items disabled" type="button" name="show-old-items">Hide Old Items</button>
       <button class="btn btn-info show-old-items" type="button" name="show-old-items">Show Old Items</button>
       {{#each tasks}}
-      <tasklist-item class="{{class}}" date-string="{{dateString}}" entry-date="{{entryDate}}" days-until="{{daysUntil.string}}" reference-date="{{referenceDate.string}}" interpreted-date="{{interpretedDate.string}}" interpreted-day-of-week="{{interpretedDate.dayOfWeek}}"
+      <tasklist-item class="{{class}}"
+        date-string="{{dateString}}"
+        entry-date="{{entryDate}}"
+        days-until="{{daysUntil.string}}"
+        reference-date="{{referenceDate.string}}"
+        interpreted-date="{{interpretedDate.string}}"
+        interpreted-day-of-week="{{interpretedDate.dayOfWeek}}"
+        interpreted-time-of-day="{{interpretedDate.timeOfDay}}"
         local="{{local}}">{{text}}</tasklist-item>
       {{/each}}
     </template>

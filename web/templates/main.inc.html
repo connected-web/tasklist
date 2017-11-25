@@ -450,6 +450,10 @@
         margin-right: 0px;
       }
 
+      tasklist-item .time-of-day {
+        margin-right: 4px;
+      }
+
       tasklist-item .glyphicon {
         font-size: 110%;
         vertical-align: text-top;
@@ -504,7 +508,14 @@
       <button class="btn btn-info hide-old-items disabled" type="button" name="show-old-items">Hide Old Items</button>
       <button class="btn btn-info show-old-items" type="button" name="show-old-items">Show Old Items</button>
       {{#each tasks}}
-      <tasklist-item class="{{class}}" date-string="{{dateString}}" entry-date="{{entryDate}}" days-until="{{daysUntil.string}}" reference-date="{{referenceDate.string}}" interpreted-date="{{interpretedDate.string}}" interpreted-day-of-week="{{interpretedDate.dayOfWeek}}" interpreted-time-of-day="{{interpretedDate.timeOfDay}}"
+      <tasklist-item class="{{class}}"
+        date-string="{{dateString}}"
+        entry-date="{{entryDate}}"
+        days-until="{{daysUntil.string}}"
+        reference-date="{{referenceDate.string}}"
+        interpreted-date="{{interpretedDate.string}}"
+        interpreted-day-of-week="{{interpretedDate.dayOfWeek}}"
+        interpreted-time-of-day="{{interpretedDate.timeOfDay}}"
         local="{{local}}">{{text}}</tasklist-item>
       {{/each}}
     </template>
