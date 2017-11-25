@@ -12,7 +12,7 @@
   var MonthOfYearMatcher = /^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[ruarychileyustemober]*$/i;
   var DateInMonthMatcher = /^(\d\d?)[nrdsth]{2}$/i;
   var TimeOfDayMatcher = /^(1?\d):?([0-5]\d)?(am|pm)$/i;
-  var ExactTimeOfDayMatcher = /^(1?\d):([0-5]\d)$/i;
+  var ExactTimeOfDayMatcher = /^([1-2]?\d):([0-5]\d):?([0-5]\d)?$/i;
   var YearMatcher = /^(\d\d\d\d)$/i;
   var RogueNumberMatcher = /^(\d?\d),?$/i;
 
@@ -89,10 +89,14 @@
     var time = token.match(ExactTimeOfDayMatcher);
     var hours = Number.parseInt(time[1]);
     var minutes = Number.parseInt(time[2]);
+    var seconds = Number.parseInt(time[3])
+
+    var setUTCSeconds = seconds ? seconds : undefined;
 
     return {
       setUTCHours: hours,
-      setUTCMinutes: minutes
+      setUTCMinutes: minutes,
+      setUTCSeconds: setUTCSeconds
     };
   }
 

@@ -116,5 +116,12 @@ describe('Interpret Date', () => {
     test('15:59', 'Sun, 12 Feb 2017 15:59:00 GMT');
     test('5:15am', 'Sun, 12 Feb 2017 05:15:00 GMT');
     test('5:45pm', 'Sun, 12 Feb 2017 17:45:00 GMT');
+    test('20:15', 'Sun, 12 Feb 2017 20:15:00 GMT');
+    test('25:05', 'Mon, 13 Feb 2017 01:05:00 GMT');
+    test('21:03:30', 'Sun, 12 Feb 2017 21:03:30 GMT');
+  })
+
+  describe('Mixed date and time', () => {
+    test('6th December 2017 20:15', 'Wed, 06 Dec 2017 20:15:00 GMT')
   })
 });
