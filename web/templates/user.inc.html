@@ -181,6 +181,17 @@
       </p>
     </template>
 
+    <script for="tasklist" type="text/javascript">
+      $(function() {
+        TasklistItem = Component.configure('tasklist-item');
+        TasklistItem.on('renderComplete', function(instance) {
+          $(instance.element).on('click', function() {
+            $(instance.element).find('.date').toggleClass('visible')
+          });
+        });
+      });
+    </script>
+
     <style for="tasklist-item">
       .row>.col-md-6 {
         margin-bottom: 5px;
