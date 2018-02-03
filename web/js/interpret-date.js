@@ -202,6 +202,7 @@
 
     var now = context.getTime();
     var future = new Date(now);
+    future.setUTCDate(1);
     future.setUTCMonth(monthOffset);
     if (context.getMonth() > monthOffset) {
       future.setUTCFullYear(context.getUTCFullYear() + 1)
@@ -258,7 +259,7 @@
         if (matcher.regex.test(token)) {
           var result = matcher.handler(token, tokens, context);
           if (interpretDate.debug) {
-            console.log(LOG_TABS, 'Matched', JSON.stringify(result));
+            console.log(LOG_TABS, 'Matched', JSON.stringify(result), token, matcher.regex);
           }
           results.push(result);
         };
@@ -291,11 +292,24 @@
       }
     }
 
+    // Create a new date relative to the context
     var date = new Date(context);
-    Object.keys(decisions).forEach(function (key) {
+    var usedKeys = Object.keys(decisions);
+
+    function onlyUsedKeys (key) {
+      return usedKeys.includes(key);
+    }
+
+    function applyDecision(key) {
       var value = decisions[key];
       date[key](value);
-    });
+    }
+
+    // Force an order to apply decisions
+    var allowedKeys = ['setUTCSeconds', 'setUTCMinutes', 'setUTCHours', 'setUTCDate', 'setUTCMonth', 'setUTCFullYear'];
+
+    // Starting with a key order, filter to keep keys that are used in decision making
+    allowedKeys.filter(onlyUsedKeys).forEach(applyDecision);
 
     return date;
   }

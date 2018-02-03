@@ -53,6 +53,7 @@ describe('Interpret Date', () => {
   describe('Month of year strings', () => {
     test('Jan', 'Mon, 01 Jan 2018 08:00:00 GMT');
     test('Febru evenig', 'Wed, 01 Feb 2017 18:00:00 GMT');
+    test('Feb 4th 10:05am', 'Sun, 04 Feb 2018 10:05:00 GMT', new Date(1517418180000));
     test('March eve', 'Wed, 01 Mar 2017 18:00:00 GMT');
     test('April', 'Sat, 01 Apr 2017 08:00:00 GMT');
     test('May eve', 'Mon, 01 May 2017 18:00:00 GMT');
