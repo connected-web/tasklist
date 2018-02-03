@@ -10,10 +10,4 @@ Use `npm start` to run the service.
 
 ## Deployment
 
-Requires google cloud tools (`gcloud`) to deploy and monitor.
-
-Use `npm run deploy` to deploy the code to google cloud.
-
-### Monitoring
-
-Use `npm run logs` to access the live logs from the server.
+There are FTP deployment scripts, see: `scripts/deploy/README.md` for setup.

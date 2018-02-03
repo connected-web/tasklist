@@ -25,7 +25,7 @@ app.use('/tasklist', express.static(path.join(__dirname, 'web')))
 app.get('/tasklist/tasks/json', function (req, res) {
   let tasks = [];
   if(stubAuth) {
-    tasks = fs.readFileSync(path.join(__dirname, 'state', 'tasklist.json'), utf8)
+    tasks = JSON.parse(fs.readFileSync(path.join(__dirname, 'state', 'tasklist.json'), utf8))
   }
   else {
     tasks = [{
