@@ -221,8 +221,8 @@
         task.class = ('unit-' + task.unit + ' ' + task.past).trim();
         task.interpretedDate.string = task.interpretedDate.toUTCString();
         task.referenceDate.string = task.referenceDate.toUTCString();
-        task.interpretedDate.dayOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][task.interpretedDate.getDay()];
-        task.interpretedDate.timeOfDay = zp(task.interpretedDate.getHours()) + ':' + zp(task.interpretedDate.getMinutes())
+        task.interpretedDate.dayOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][task.interpretedDate.getUTCDay()];
+        task.interpretedDate.timeOfDay = zp(task.interpretedDate.getUTCHours()) + ':' + zp(task.interpretedDate.getUTCMinutes())
 
         return task;
       }
