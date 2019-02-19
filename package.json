@@ -11,12 +11,15 @@
   "scripts": {
     "start": "node app.js",
     "test": "mocha test/**/*.js --recursive",
-    "setup": "./scripts/setup/installComposer.sh && rm web/auth/composer.lock && cd web/auth && php composer.phar install"
+    "setup": "./scripts/setup/installComposer.sh && rm web/auth/composer.lock && cd web/auth && php composer.phar install",
+    "postinstall": "cp ./node_modules/time-until/time-until.js ./web/js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "time-until": "^1.0.0"
+  },
   "devDependencies": {
     "assert": "^1.4.1",
-    "express": "^4.14.1",
-    "mocha": "^3.2.0"
+    "express": "^4.16.4",
+    "mocha": "^6.0.0"
   }
 }

@@ -5,3 +5,4 @@ web/auth/composer.phar
 web/auth/composer.lock
 web/auth/vendor
 web/auth/secrets.php
+web/js/time-until.js
