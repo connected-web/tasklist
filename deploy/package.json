@@ -1,0 +1,26 @@
+{
+  "name": "mkv25-site-deployment",
+  "version": "0.2.0",
+  "main": "deploy.js",
+  "scripts": {
+    "stage-images": "node deploy stage-images",
+    "stage-code": "node deploy stage-code",
+    "stage-all": "node deploy stage-all",
+    "stage-php": "node deploy stage-php",
+    "stage-php-lib": "node deploy stage-php-lib",
+    "stage-scripts": "node deploy stage-scripts",
+    "stage-stylesheets": "node deploy stage-stylesheets",
+    "stage-templates": "node deploy stage-templates",
+    "stage-content": "node deploy stage-content",
+    "stage-articles": "node deploy stage-articles",
+    "stage-projects": "node deploy stage-projects",
+    "live-release": "node deploy live-release"
+  },
+  "devDependencies": {
+    "ftp-deploy": "^2.3.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Markavian/mkv25-responsive-website/tree/master/deploy"
+  }
+}

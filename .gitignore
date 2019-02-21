@@ -1,5 +1,5 @@
 node_modules
-scripts/deploy/.ftppass
+.ftppass
 web/data/tasks.cache
 web/auth/composer.phar
 web/auth/composer.lock
