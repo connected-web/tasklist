@@ -174,7 +174,7 @@
         <span class="time-of-day">{{interpreted-time-of-day}}</span> {{#if local}}
         <span class="glyphicon glyphicon-flash" aria-hidden="true"></span> {{/if}}
         <span class="glyphicon glyphicon-trash delete button" aria-hidden="true"></span>
-        <b>{{days-until}}</b> : {{content}}, <i style="opacity: 0.4;">{{date-string}}</i>
+        <b>{{days-until}}</b> : {{#if content}}{{content}}, <i style="opacity: 0.4;">{{date-string}}</i>{{else}}{{date-string}}{{/if}}
         <span class="date">{{interpreted-date}}</span>
         <span class="hidden">Interpretted: {{interpreted-date}}</span>
         <span class="hidden">Reference: {{reference-date}}</span>
