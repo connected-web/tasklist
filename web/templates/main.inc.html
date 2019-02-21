@@ -231,7 +231,7 @@
       function addNewEntry(task) {
         var localTasks = readLocalTasks();
         localTasks.tasks = localTasks.tasks || [];
-        if (task.dateString && task.text) {
+        if (task.dateString) {
           if (window.auth) {
             $.post('./store', {
               entryDate: task.entryDate,
