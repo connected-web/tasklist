@@ -26,7 +26,8 @@ const defaultConfig = {
 
 const modes = {
   'live-release': () => deploy({
-    include: ['**/*']
+    include: ['**/*'],
+    exclude: ['vendor/**/*']
   })
 }
 
