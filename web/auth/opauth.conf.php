@@ -1,6 +1,21 @@
 <?php
 
-require(dirname(__FILE__).'/secrets.php');
+/**
+ * OpenAuth Config
+ * 
+ * Secrets can be found in secrets.php / secrets-template.php
+ * 
+ * php version 7
+ * 
+ * @category   Config
+ * @package    Tasklist
+ * @subpackage OPAuth
+ * @author     John Beech <github@mkv25.net>
+ * @license    https://choosealicense.com/no-permission/ UNLICENSED
+ * @link       https://mvk25.net/tasklist/
+ */
+
+require dirname(__FILE__).'/secrets.php';
 
 $config = array(
 /**
@@ -9,43 +24,43 @@ $config = array(
  *  - eg. if Opauth is reached via http://example.org/auth/, path is '/auth/'
  *  - if Opauth is reached via http://auth.example.org/, path is '/'
  */
-	'path' => '/tasklist/auth/',
+    'path' => '/tasklist/auth/',
 
 /**
  * Callback URL: redirected to after authentication, successful or otherwise
  */
-	'callback_url' => '{path}callback.php',
+    'callback_url' => '{path}callback.php',
 
 /**
  * A random string used for signing of $auth response.
  */
-	'security_salt' => $OPAUTH_SECURITY_SALT,
+    'security_salt' => $OPAUTH_SECURITY_SALT,
 /**
  * Strategy
  * Refer to individual strategy's documentation on configuration requirements.
  */
-	'Strategy' => array(
-		// Define strategies and their respective configs here
+    'Strategy' => array(
+        // Define strategies and their respective configs here
 
-		'Facebook' => array(
-			'app_id' => $FACEBOOK_APP_ID,
-			'app_secret' => $FACEBOOK_APP_SECRET
-		),
+        'Facebook' => array(
+            'app_id' => $FACEBOOK_APP_ID,
+            'app_secret' => $FACEBOOK_APP_SECRET
+        ),
 
-		'Google' => array(
-			'client_id' => $GOOGLE_CLIENT_ID,
-			'client_secret' => $GOOGLE_CLIENT_SECRET
-		),
+        'Google' => array(
+            'client_id' => $GOOGLE_CLIENT_ID,
+            'client_secret' => $GOOGLE_CLIENT_SECRET
+        ),
 
-		'Twitter' => array(
-			'key' => $TWITTER_AUTH_KEY,
-			'secret' => $TWITTER_AUTH_SECRET
-		),
+        'Twitter' => array(
+            'key' => $TWITTER_AUTH_KEY,
+            'secret' => $TWITTER_AUTH_SECRET
+        ),
 
     'GitHub' => array(
       'client_id' => $GITHUB_CLIENT_ID,
       'client_secret' => $GITHUB_CLIENT_SECRET
     )
 
-	),
+    ),
 );

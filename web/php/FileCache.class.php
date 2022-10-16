@@ -1,85 +1,158 @@
 <?php
 
+/**
+ * File Cache Class
+ *
+ * For reading and writing cached pages from the local file system.
+ * 
+ * php version 7
+ *
+ * @category   Caching
+ * @package    DFMA
+ * @subpackage Caching
+ * @author     John Beech <github@mkv25.net>
+ * @license    https://choosealicense.com/no-permission/ UNLICENSED
+ * @link       https://mvk25.net/dfma/
+ */
+
+/**
+ * File Cache Class
+ * 
+ * @category   Classes
+ * @package    DFMA
+ * @subpackage Caching
+ * @author     John Beech <github@mkv25.net>
+ * @license    https://choosealicense.com/no-permission/ UNLICENSED
+ * @link       https://mvk25.net/dfma/
+ */
 class FileCache
 {
-	static $reads = 0;
-	static $writes = 0;
+    var $path;
 
-	public static function doesNotExist($cacheId)
-	{
-		return !FileCache::exists($cacheId);
-	}
+    /** 
+     * Constructor for File Cache
+     * 
+     * @param string $path The local file path to read and write from
+     * 
+     * @return void 
+     */
+    function __construct($path)
+    {
+        $this->path = $path;
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+    }
 
-	public static function exists($cacheId)
-	{
-		$path = FileCache::getFilePathFor($cacheId);
-		return file_exists($path);
-	}
+    /** 
+     * Load method for file cache
+     * 
+     * @param string  $key    the cache key to find content for
+     * @param integer $maxAge the amount of time to check against for expiry
+     * 
+     * @return void 
+     */
+    function load($key, $maxAge=0)
+    {
+        // Create key
+        $key = $this->sanitizeKey($key);
+        $filePath = $this->path . '/' . $key;
 
-	public static function ageOfCache($cacheId)
-	{
-		$age = false;
+        // Read file
+        $contents = @file_get_contents($filePath);
 
-		$path = FileCache::getFilePathFor($cacheId);
-		if(file_exists($path))
-		{
-			$mtime = filemtime($path);
-			$age = time() - $mtime;
-		}
+        // Prepare data
+        $decoded = unserialize($contents);
+        if ($decoded) {
+            header('X-Page-Cache-Load: ' . $key . ', key loaded');
+        }
 
-		return $age;
-	}
+        // Check for expiry
+        if ($this->expired($decoded, $maxAge)) {
+            $decoded = false;
+            header('X-Page-Cache-Expired: ' . $key . ', expired');
+        }
 
-	public static function readDataFromCache($cacheId)
-	{
-		$data = false;
+        return $decoded;
+    }
 
-		$path = FileCache::getFilePathFor($cacheId);
+    /** 
+     * Store method for file cache
+     * 
+     * @param string $key   the cache key to store content against
+     * @param object $value the object data to store in the cache
+     * 
+     * @return boolean 
+     */
+    function store($key, $value)
+    {
+        // Create key
+        $key = $this->sanitizeKey($key);
+        $filePath = $this->path . '/' . $key;
 
-		if(file_exists($path))
-		{
-			$cacheContents = file_get_contents($path);
-			$data = unserialize($cacheContents);
+        // Prepare data
+        if (is_array($value)) {
+            $value['time'] = time();
+        }
+        $encoded = serialize($value);
 
-			FileCache::$reads++;
-		}
+        // Write file
+        $fp = @fopen($filePath, 'w');
+        if ($fp) {
+            fwrite($fp, $encoded);
+            fwrite($fp, '23');
+            fclose($fp);
+            header('X-Page-Cache-Store: ' . $key . ', stored');
+            return true;
+        } else {
+            header('X-Page-Cache-Error: ' . $key . ', unable to open ' . $filePath);
+        }
 
-		return $data;
-	}
+        return false;
+    }
 
-	public static function storeDataInCache($data, $cacheId)
-	{
-		$success = false;
+    /** 
+     * Check if decoded content has expired against a given maxAge
+     * 
+     * @param object  $decoded the decoded data object containing a time property
+     * @param integer $maxAge  the amount of time to check against for expiry
+     * 
+     * @return boolean 
+     */
+    function expired($decoded, $maxAge)
+    {
+        $result = false;
+        if ($maxAge > 0 && is_array($decoded)) {
+            $time = isset($decoded['time']) ? $decoded['time'] : 0;
+            $now = time();
+            $age = $now - $decoded['time'];
+            $expires = date('D M j G:i:s T Y', $decoded['time'] + $maxAge);
+            $lifeRemaining = ($decoded['time'] + $maxAge) - $now;
+            header('X-Page-Cache-Age: ' . $age . ' seconds');
+            if ($age > $maxAge) {
+                $decoded = false;
+                $result = true;
+            } else {
+                header(
+                    'X-Page-Cache-Expires: ' . $expires . ', in ' 
+                        . $lifeRemaining . ' seconds'
+                );
+            }
+        }
+        return $result;
+    }
 
-		$path = FileCache::getFilePathFor($cacheId);
-
-		if($data)
-		{
-			$cacheContents = serialize($data);
-			$file = @fopen($path, 'w');
-			@fwrite($file, $cacheContents);
-			@fclose($file);
-
-			FileCache::$writes++;
-
-			$success = true;
-		}
-
-		return $success;
-	}
-
-	public static function removeCache($cacheId)
-	{
-		$path = FileCache::getFilePathFor($cacheId);
-
-		if(file_exists($path))
-		{
-			unlink($path);
-		}
-	}
-
-	private static function getFilePathFor($cacheId)
-	{
-		return __DIR__ . '/../data/' . $cacheId . '.cache';
-	}
+    /** 
+     * Check if decoded content has expired against a given maxAge
+     * 
+     * @param string $key the key to make file system friendly
+     * 
+     * @return string 
+     */
+    function sanitizeKey($key)
+    {
+        $key = preg_replace("/[^a-zA-Z0-9]/", "-", $key);
+        $key = trim($key);
+        return $key;
+    }
 }

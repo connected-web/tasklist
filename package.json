@@ -12,7 +12,11 @@
     "start": "node app.js",
     "deploy": "node deploy live-release",
     "test": "standard && mocha test/**/*.js --recursive",
-    "lint": "standard --fix",
+    "lint": "npm run lint:js && npm run lint:php",
+    "lint:js": "standard",
+    "lint:js:fix": "standard --fix",
+    "lint:php": "./web/vendor/bin/phpcs web/*.php web/**/*.php --ignore=vendor,build",
+    "lint:php:fix": "./web/vendor/bin/phpcbf web/*.php web/**/*.php --ignore=vendor,build",
     "setup": "./scripts/setup/setup.sh",
     "postinstall": "cp ./node_modules/time-until/time-until.js ./web/js"
   },
