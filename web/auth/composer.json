@@ -1,5 +1,5 @@
 {
-    "name": "tasklist/web/auth",
+    "name": "tasklist/web-auth",
     "description": "Multi-provider authentication framework for PHP",
     "type": "authentication",
     "keywords": ["tasklist", "authentication", "auth", "oauth", "openid", "omniauth", "facebook", "google", "twitter"],

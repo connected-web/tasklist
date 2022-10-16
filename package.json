@@ -12,7 +12,7 @@
     "start": "node app.js",
     "deploy": "node deploy live-release",
     "test": "mocha test/**/*.js --recursive",
-    "setup": "./scripts/setup/installComposer.sh && rm web/auth/composer.lock && cd web/auth && php composer.phar install",
+    "setup": "./scripts/setup/setup.sh",
     "postinstall": "cp ./node_modules/time-until/time-until.js ./web/js"
   },
   "dependencies": {
