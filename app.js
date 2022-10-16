@@ -5,7 +5,7 @@ const app = express()
 const fs = require('fs')
 const utf8 = 'utf8'
 
-var stubAuth = false;
+let stubAuth = false
 
 app.get('/tasklist/', function (req, res) {
   if (req.originalUrl !== '/tasklist/') {
@@ -15,7 +15,7 @@ app.get('/tasklist/', function (req, res) {
   const template = fs.readFileSync('./web/templates/main.inc.html', utf8)
   const navigation = fs.readFileSync('./web/templates/navigation.inc.html', utf8)
 
-  var output = template.replace('{{NAVIGATION}}', navigation)
+  let output = template.replace('{{NAVIGATION}}', navigation)
   output = output.replace('{{NOW}}', Date.now())
   res.send(output)
 })
@@ -23,11 +23,10 @@ app.get('/tasklist/', function (req, res) {
 app.use('/tasklist', express.static(path.join(__dirname, 'web')))
 
 app.get('/tasklist/tasks/json', function (req, res) {
-  let tasks = [];
-  if(stubAuth) {
+  let tasks = []
+  if (stubAuth) {
     tasks = JSON.parse(fs.readFileSync(path.join(__dirname, 'state', 'tasklist.json'), utf8))
-  }
-  else {
+  } else {
     tasks = [{
       text: 'No tasks stored remotely',
       dateString: 'Today',
@@ -39,7 +38,7 @@ app.get('/tasklist/tasks/json', function (req, res) {
   })
 })
 
-function provider(label, id) {
+function provider (label, id) {
   return {
     label,
     id,
@@ -48,7 +47,7 @@ function provider(label, id) {
 }
 
 app.get('/tasklist/auth/status/json', function (req, res) {
-  var result;
+  let result
   if (stubAuth) {
     result = {
       auth: stubAuth,
@@ -90,7 +89,7 @@ app.get('/tasklist/auth/:provider', function (req, res) {
   res.redirect('/tasklist')
 })
 
-const port = 8000;
+const port = 8000
 app.listen(port, function () {
   console.log(`Taklist listening on http://localhost:${port}/tasklist/`)
 })

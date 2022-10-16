@@ -11,16 +11,27 @@
   "scripts": {
     "start": "node app.js",
     "deploy": "node deploy live-release",
-    "test": "mocha test/**/*.js --recursive",
+    "test": "standard && mocha test/**/*.js --recursive",
+    "lint": "standard --fix",
     "setup": "./scripts/setup/setup.sh",
     "postinstall": "cp ./node_modules/time-until/time-until.js ./web/js"
   },
   "dependencies": {
+    "guessdate-en": "^1.0.3",
     "time-until": "^1.0.0"
   },
   "devDependencies": {
     "assert": "^2.0.0",
     "express": "^4.17.1",
-    "mocha": "^8.3.2"
+    "mocha": "^8.3.2",
+    "standard": "^17.0.0"
+  },
+  "standard": {
+    "env": [
+      "mocha"
+    ],
+    "ignore": [
+      "**/web/external"
+    ]
   }
 }
