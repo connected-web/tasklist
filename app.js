@@ -65,7 +65,7 @@ app.get('/tasklist/auth/status/json', function (req, res) {
       providers: [
         provider('Facebook', 'facebook'),
         provider('Twitter', 'twitter'),
-        provider('Google', 'google'),
+        // provider('Google', 'google'),
         provider('GitHub', 'github')
       ]
     }

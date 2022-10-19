@@ -60,7 +60,7 @@ if ($auth) {
     'message' => $authUnavailableMessage,
     'providers' => array(
       provider('Facebook', 'facebook'),
-      provider('Twitter', 'twitter'),
+      // provider('Twitter', 'twitter'),
       provider('Google', 'google'),
       provider('GitHub', 'github')
     )

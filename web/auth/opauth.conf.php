@@ -51,16 +51,16 @@ $config = array(
             'client_id' => $GOOGLE_CLIENT_ID,
             'client_secret' => $GOOGLE_CLIENT_SECRET
         ),
-
+        /*
         'Twitter' => array(
             'key' => $TWITTER_AUTH_KEY,
             'secret' => $TWITTER_AUTH_SECRET
         ),
-
-    'GitHub' => array(
-      'client_id' => $GITHUB_CLIENT_ID,
-      'client_secret' => $GITHUB_CLIENT_SECRET
-    )
+        */
+        'GitHub' => array(
+            'client_id' => $GITHUB_CLIENT_ID,
+            'client_secret' => $GITHUB_CLIENT_SECRET
+        )
 
     ),
 );
